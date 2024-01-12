@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "108585005729",
+    "project_id": "carbozzo-final-224ad",
+    "storage_bucket": "carbozzo-final-224ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108585005729:android:b50fd2028633c526a236e0",
+        "android_client_info": {
+          "package_name": "com.example.carbozzo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108585005729-0n26qcm3fvdi0g3c95028oq7j5292uev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.carbozzo",
+            "certificate_hash": "e4ff79623c8674902b3d53c7c6565aac0f2a4e8e"
+          }
+        },
+        {
+          "client_id": "108585005729-jio9aa1r281155asi94gnbvabrp03ro2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0i-dULTl6KvbPwUjhOCaUxJEd2NsLMoE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108585005729-jio9aa1r281155asi94gnbvabrp03ro2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "108585005729-o4nlm141smbggo0b95jdfm1c41foe4ka.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carbozzo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
