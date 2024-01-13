@@ -125,45 +125,46 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
   }
 
   Future<void> _uploadImageToFirestore(String caption) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      print('Error: User not authenticated.');
+      return;
+    }
+
+    String userId = user.uid;
+    String documentId = DateTime.now().millisecondsSinceEpoch.toString();
+
+    CollectionReference imagesCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('images');
+
+    File imageFile = File(pictureFile!.path);
+
+    String imageUrl =
+        await _uploadImageToStorage(imageFile, userId, documentId);
+
+    await imagesCollection.add({
+      'imageUrl': imageUrl,
+      'caption': caption,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<String> _uploadImageToStorage(
+      File imageFile, String userId, String documentId) async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
+      String imageName = '$documentId.jpg';
+      String imagePath = 'users/$userId/$imageName';
 
-      if (user == null) {
-        print('Error: User not authenticated.');
-        return;
-      }
+      UploadTask uploadTask =
+          FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
 
-      String userId = user.uid;
-      String documentId = DateTime.now().millisecondsSinceEpoch.toString();
-
-      CollectionReference imagesCollection =
-          FirebaseFirestore.instance.collection('images');
-
-      File imageFile = File(pictureFile!.path);
-
-      // Print statements for debugging
-      print('Uploading image to storage...');
-      UploadTask uploadTask = FirebaseStorage.instance.ref().putFile(imageFile);
-
-      // Wait for the upload to complete and get the download URL
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
-      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-
-      // Print statements for debugging
-      print('Image uploaded to storage successfully.');
-      print('Download URL: $downloadUrl');
-
-      // Create a Firestore document with image details
-      await imagesCollection.doc(documentId).set({
-        'userId': userId,
-        'imageUrl': downloadUrl,
-        'caption': caption,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-
-      print('Firestore document created successfully.');
+      return await taskSnapshot.ref.getDownloadURL();
     } catch (e) {
-      print('Error during image upload: $e');
+      throw ('Error during image upload to storage: $e');
     }
   }
 
@@ -197,7 +198,8 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding:
+              const EdgeInsets.only(top: 20.0, left: 10, right: 10, bottom: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -256,32 +258,6 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
                 ),
               ),
             ],
-          ),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(bottom: 15.0, top: 5, left: 10, right: 10),
-          child: GestureDetector(
-            onTap: () {
-              print('Image Submitted');
-            },
-            child: Container(
-              height: 45,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  'Submit',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.deepPurple[600],
-                  ),
-                ),
-              ),
-            ),
           ),
         ),
       ]),

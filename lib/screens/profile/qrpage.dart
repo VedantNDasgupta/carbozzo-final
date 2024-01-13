@@ -25,15 +25,11 @@ class _QRPageState extends State<QRPage> {
   }
 
   Future<void> fetchUserData() async {
-    // Check if the user is signed in
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      // Fetch the user's email
       userEmail = user.email ?? "";
 
-      // Fetch the user's UID
-      // Replace 'users' with your Firestore collection name
       QuerySnapshot userQuery = await FirebaseFirestore.instance
           .collection('users')
           .where('email', isEqualTo: userEmail)
@@ -42,8 +38,6 @@ class _QRPageState extends State<QRPage> {
       if (userQuery.docs.isNotEmpty) {
         String userDocumentId = userQuery.docs.first.id;
 
-        // Fetch the user's UID from Firestore
-        // Replace 'users' with your Firestore collection name
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection('users')
             .doc(userDocumentId)
@@ -110,7 +104,8 @@ class _QRPageState extends State<QRPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => QRScannerScreen(),
+                          builder: (context) =>
+                              QRScannerScreen(userUid: userUid),
                         ),
                       );
                     },
@@ -152,10 +147,7 @@ class _QRPageState extends State<QRPage> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 60),
-
-                  // Display generated QR code using the method
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -178,7 +170,6 @@ class _QRPageState extends State<QRPage> {
                     ),
                     child: buildQRCode(userUid),
                   ),
-
                   SizedBox(height: 20),
                 ],
               ),
@@ -191,6 +182,10 @@ class _QRPageState extends State<QRPage> {
 }
 
 class QRScannerScreen extends StatefulWidget {
+  final String userUid;
+
+  QRScannerScreen({required this.userUid});
+
   @override
   _QRScannerScreenState createState() => _QRScannerScreenState();
 }
@@ -215,23 +210,36 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                 controller.scannedDataStream.listen((scanData) {
                   setState(() {
                     result = scanData;
-                    // Close the current screen
                     Navigator.pop(context);
-
-                    // Show alert dialog on the previous screen
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
+                        String? pairedUserUid = result.code;
+
+                        CollectionReference userPairingsCollection =
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(widget.userUid)
+                                .collection('pairings');
+
+                        userPairingsCollection.add({
+                          'user1Uid': widget.userUid,
+                          'user2Uid': pairedUserUid,
+                          'pairingTimestamp': FieldValue.serverTimestamp(),
+                          'expirationTimestamp':
+                              DateTime.now().add(Duration(days: 7)),
+                        });
+
                         return AlertDialog(
                           backgroundColor: Colors.black,
                           title: Text(
-                            'Paired to user: ${result.code}',
+                            'Paired to user: $pairedUserUid',
                             style: TextStyle(color: Colors.white),
                           ),
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context); // Close the dialog
+                                Navigator.pop(context);
                               },
                               child: Text(
                                 'OK',
