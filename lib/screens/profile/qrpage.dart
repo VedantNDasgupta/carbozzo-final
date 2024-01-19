@@ -222,12 +222,19 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                                 .doc(widget.userUid)
                                 .collection('pairings');
 
-                        userPairingsCollection.add({
-                          'user1Uid': widget.userUid,
-                          'user2Uid': pairedUserUid,
-                          'pairingTimestamp': FieldValue.serverTimestamp(),
-                          'expirationTimestamp':
-                              DateTime.now().add(Duration(days: 7)),
+                        userPairingsCollection
+                            .where('user2Uid', isEqualTo: pairedUserUid)
+                            .get()
+                            .then((querySnapshot) {
+                          if (querySnapshot.docs.isEmpty) {
+                            userPairingsCollection.add({
+                              'user1Uid': widget.userUid,
+                              'user2Uid': pairedUserUid,
+                              'pairingTimestamp': FieldValue.serverTimestamp(),
+                              'expirationTimestamp':
+                                  DateTime.now().add(Duration(days: 7)),
+                            });
+                          }
                         });
 
                         return AlertDialog(

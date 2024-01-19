@@ -2,7 +2,7 @@ import 'package:carbozzo/components/campus.dart';
 import 'package:carbozzo/components/firebase_auth_services.dart';
 import 'package:carbozzo/components/internet_provider.dart';
 import 'package:carbozzo/components/my_textfield.dart';
-import 'package:carbozzo/components/nav_bar.dart';
+
 import 'package:carbozzo/components/signin_provider.dart';
 import 'package:carbozzo/components/toast.dart';
 import 'package:carbozzo/pages/intro_pages/login_page.dart';

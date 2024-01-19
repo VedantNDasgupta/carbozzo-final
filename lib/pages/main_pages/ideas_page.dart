@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carbozzo/screens/challenge_screen.dart';
 import 'package:carbozzo/screens/tasks_info/taskinfo_1.dart';
 import 'package:carbozzo/screens/tasks_info/taskinfo_2.dart';
@@ -7,7 +9,6 @@ import 'package:carbozzo/screens/timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class IdeasPage extends StatefulWidget {
   const IdeasPage({Key? key}) : super(key: key);
@@ -17,50 +18,8 @@ class IdeasPage extends StatefulWidget {
 }
 
 class _IdeasPageState extends State<IdeasPage> {
-  late List<Color> dayColors = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadDayColors();
-  }
-
-  Future<void> loadDayColors() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    DateTime now = DateTime.now();
-    int? lastOpenedDay = prefs.getInt('last_opened_day');
-    int currentDayIndex = now.weekday - 1;
-
-    if (lastOpenedDay == null ||
-        now
-                .difference(DateTime.fromMillisecondsSinceEpoch(lastOpenedDay))
-                .inDays >=
-            1) {
-      if (lastOpenedDay != null) {
-        // Keep the previously green tile green
-        dayColors[lastOpenedDay - 1] = Colors.green;
-      }
-      updateDayColors(currentDayIndex);
-      prefs.setInt('last_opened_day', now.millisecondsSinceEpoch);
-    } else {
-      updateDayColors(lastOpenedDay - 1);
-    }
-  }
-
-  void updateDayColors(int index) {
-    setState(() {
-      dayColors =
-          List.generate(7, (i) => i == index ? Colors.green : Colors.black);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (dayColors.isEmpty) {
-      // Return a loading indicator or some default UI until dayColors is initialized.
-      return CircularProgressIndicator();
-    }
-
     return Scaffold(
         backgroundColor: Color.fromRGBO(198, 40, 40, 1),
         body: SafeArea(
@@ -148,7 +107,8 @@ class _IdeasPageState extends State<IdeasPage> {
                                         margin:
                                             EdgeInsets.only(top: 5, right: 3),
                                         decoration: BoxDecoration(
-                                          color: dayColors[index],
+                                          color:
+                                              _getRandomColor(), // Use the random color function
                                           borderRadius:
                                               BorderRadius.circular(5),
                                         ),
@@ -207,72 +167,88 @@ class _IdeasPageState extends State<IdeasPage> {
                         height: 20,
                       ),
                       SizedBox(
-                        height: 200,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right: 3.0), //list padding horizontal
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Task1Screen(),
-                                    ),
-                                  );
-                                  // Navigate to Task1Screen
-                                },
-                                child: promoCard('lib/images/Card1.png'),
-                              ),
+                        height: 240,
+                        child: Container(
+                          width: 380,
+                          height: 190,
+                          decoration: BoxDecoration(
+                            color: Colors.white60,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2, // Increase the border width
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 3.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Task2Screen(),
-                                    ),
-                                  );
-                                  // Navigate to Task2Screen
-                                },
-                                child: promoCard('lib/images/Card2.png'),
-                              ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15, bottom: 15, left: 20, right: 20),
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      right: 3.0), //list padding horizontal
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Task1Screen(),
+                                        ),
+                                      );
+                                      // Navigate to Task1Screen
+                                    },
+                                    child: promoCard('lib/images/Card1.png'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 3.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Task2Screen(),
+                                        ),
+                                      );
+                                      // Navigate to Task2Screen
+                                    },
+                                    child: promoCard('lib/images/Card2.png'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 3.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Task3Screen(),
+                                        ),
+                                      );
+                                      // Navigate to Task3Screen
+                                    },
+                                    child: promoCard('lib/images/Card3.png'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 3.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Task4Screen(),
+                                        ),
+                                      );
+                                      // Navigate to Task4Screen
+                                    },
+                                    child: promoCard('lib/images/Card4.png'),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 3.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Task3Screen(),
-                                    ),
-                                  );
-                                  // Navigate to Task3Screen
-                                },
-                                child: promoCard('lib/images/Card3.png'),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 3.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Task4Screen(),
-                                    ),
-                                  );
-                                  // Navigate to Task4Screen
-                                },
-                                child: promoCard('lib/images/Card4.png'),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -289,33 +265,49 @@ class _IdeasPageState extends State<IdeasPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChallengeScreen()),
-                          );
-                          // Navigate to the new page here
-                        },
-                        child: Container(
-                          height: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black,
-                                offset: Offset(6.0, 6.0),
+                      Container(
+                        width: 380,
+                        height: 190,
+                        decoration: BoxDecoration(
+                          color: Colors.white60,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2, // Increase the border width
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 20, bottom: 25, left: 20, right: 20),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChallengeScreen()),
+                              );
+                              // Navigate to the new page here
+                            },
+                            child: Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(6.0, 6.0),
+                                  ),
+                                ],
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                      'lib/images/challenge_visual.png'),
+                                ),
                               ),
-                            ],
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image:
-                                  AssetImage('lib/images/challenge_visual.png'),
                             ),
                           ),
                         ),
@@ -334,32 +326,48 @@ class _IdeasPageState extends State<IdeasPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TimelineScreen()),
-                          );
-                          // Navigate to the new page here
-                        },
-                        child: Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black,
-                                offset: Offset(6.0, 6.0),
+                      Container(
+                        width: 380,
+                        height: 160,
+                        decoration: BoxDecoration(
+                          color: Colors.white60,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2, // Increase the border width
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 20, bottom: 25, left: 15, right: 15),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TimelineScreen()),
+                              );
+                              // Navigate to the new page here
+                            },
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    offset: Offset(6.0, 6.0),
+                                  ),
+                                ],
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage('lib/images/roadmap.png'),
+                                ),
                               ),
-                            ],
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('lib/images/roadmap.png'),
                             ),
                           ),
                         ),
@@ -386,9 +394,9 @@ class _IdeasPageState extends State<IdeasPage> {
                 Container(
                   width: 380,
                   height: 190,
-                  margin: EdgeInsets.only(right: 20.0, left: 20),
+                  margin: EdgeInsets.only(right: 25.0, left: 25),
                   decoration: BoxDecoration(
-                    color: Colors.grey[500],
+                    color: Colors.white60,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: Colors.black,
@@ -464,31 +472,47 @@ class _IdeasPageState extends State<IdeasPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            _buildClassicCard(
-                                '10.8',
-                                'Average Yearly Carbon Footprint of a human',
-                                'Metric Tonnes',
-                                0.10),
-                            _buildClassicCard(
-                                '110',
-                                'Species of Flora and Fauna at risk of extinction',
-                                'In Hundreds',
-                                0.35),
-                            _buildClassicCard(
-                                '15',
-                                'Global Carbon Emission due to Deforestation alone',
-                                'In Percent',
-                                0.85),
-                            _buildClassicCard(
-                                '2',
-                                'Predicted Rise in Earth\'s Temperature due to CO2',
-                                'In\n Celsius',
-                                0.20),
-                          ],
+                      Container(
+                        width: 380,
+                        height: 420,
+                        decoration: BoxDecoration(
+                          color: Colors.white60,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2, // Increase the border width
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 15, bottom: 15, left: 25, right: 15),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _buildClassicCard(
+                                    '10.8',
+                                    'Average Yearly Carbon Footprint of a human',
+                                    'Metric Tonnes',
+                                    0.10),
+                                _buildClassicCard(
+                                    '110',
+                                    'Species of Flora and Fauna at risk of extinction',
+                                    'In Hundreds',
+                                    0.35),
+                                _buildClassicCard(
+                                    '15',
+                                    'Global Carbon Emission due to Deforestation alone',
+                                    'In Percent',
+                                    0.85),
+                                _buildClassicCard(
+                                    '2',
+                                    'Predicted Rise in Earth\'s Temperature due to CO2',
+                                    'In\n Celsius',
+                                    0.20),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -601,6 +625,11 @@ class _IdeasPageState extends State<IdeasPage> {
         ],
       ),
     );
+  }
+
+  Color _getRandomColor() {
+    final random = Random();
+    return random.nextBool() ? Colors.green : Colors.black;
   }
 
   // Function to get the corresponding day letter

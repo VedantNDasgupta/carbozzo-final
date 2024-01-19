@@ -222,51 +222,67 @@ class _CommunityPageState extends State<CommunityPage> {
                       height: 10,
                     ),
                     SizedBox(
-                      height: 155,
-                      child: PageView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CG1Screen()),
-                              );
-                            },
-                            child: promoCard('lib/images/CG1.png'),
+                      height: 180,
+                      child: Container(
+                        width: 380,
+                        height: 190,
+                        decoration: BoxDecoration(
+                          color: Colors.white60,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2, // Increase the border width
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CG2Screen()),
-                              );
-                            },
-                            child: promoCard('lib/images/CG2.png'),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 18, bottom: 15, right: 10, left: 10),
+                          child: PageView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CG1Screen()),
+                                  );
+                                },
+                                child: promoCard('lib/images/CG1.png'),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CG2Screen()),
+                                  );
+                                },
+                                child: promoCard('lib/images/CG2.png'),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CG3Screen()),
+                                  );
+                                },
+                                child: promoCard('lib/images/CG3.png'),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CG4Screen()),
+                                  );
+                                },
+                                child: promoCard('lib/images/CG4.png'),
+                              ),
+                            ],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CG3Screen()),
-                              );
-                            },
-                            child: promoCard('lib/images/CG3.png'),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CG4Screen()),
-                              );
-                            },
-                            child: promoCard('lib/images/CG4.png'),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -448,22 +464,38 @@ class _CommunityPageState extends State<CommunityPage> {
 
                     SizedBox(height: 30.0),
                     Container(
-                      height: 160,
+                      width: 380,
+                      height: 200,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white60,
+                        borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: Colors.black,
-                          width: 2,
+                          width: 2, // Increase the border width
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(6.0, 6.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 20, bottom: 25, right: 18, left: 18),
+                        child: Container(
+                          height: 160,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black,
+                                offset: Offset(6.0, 6.0),
+                              ),
+                            ],
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage('lib/images/quote.png'),
+                            ),
                           ),
-                        ],
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage('lib/images/quote.png'),
                         ),
                       ),
                     ),
@@ -480,119 +512,149 @@ class _CommunityPageState extends State<CommunityPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        // google form for feedback
-                        String url = 'https://forms.gle/YiMMfzaJ3aeatSYN9';
-                        launch(url);
-                      },
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(6.0, 6.0),
-                            ),
-                          ],
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('lib/images/misc1.png'),
-                          ),
+                    Container(
+                      width: 380,
+                      height:
+                          390, // Adjusted height to accommodate the contents
+                      decoration: BoxDecoration(
+                        color: Colors.white60,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 2, // Increase the border width
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // App website/store link
-                        String url = 'https://google.com';
-                        Share.share('Check out this link: $url');
-                      },
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(6.0, 6.0),
-                            ),
-                          ],
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage('lib/images/misc2.png'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: Container(
-                        height: 130,
-                        width: 600, // Adjusted height to accommodate the texts
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.red, // Use a vibrant color
-                              Colors
-                                  .redAccent, // Adjust the end color as needed
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(6.0, 6.0),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Crafted by :',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontSize: 28,
-                                color: Colors.white,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 20, right: 18, left: 18),
+                            child: GestureDetector(
+                              onTap: () {
+                                // google form for feedback
+                                String url =
+                                    'https://forms.gle/YiMMfzaJ3aeatSYN9';
+                                launch(url);
+                              },
+                              child: Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(6.0, 6.0),
+                                    ),
+                                  ],
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage('lib/images/misc1.png'),
+                                  ),
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              'Vedant Dasgupta',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 18, left: 18),
+                            child: GestureDetector(
+                              onTap: () {
+                                // App website/store link
+                                String url = 'https://google.com';
+                                Share.share('Check out this link: $url');
+                              },
+                              child: Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(6.0, 6.0),
+                                    ),
+                                  ],
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage('lib/images/misc2.png'),
+                                  ),
+                                ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 20, right: 18, left: 18),
+                              child: Container(
+                                width: 380,
+                                height: 105,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.red, // Use a vibrant color
+                                      Colors
+                                          .redAccent, // Adjust the end color as needed
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(6.0, 6.0),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Crafted by :',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 28,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      'Vedant Dasgupta',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+
                     const SizedBox(
                       height: 20,
                     )
