@@ -1,5 +1,6 @@
 import 'package:carbozzo/components/toast.dart';
 import 'package:carbozzo/pages/intro_pages/login_page.dart';
+import 'package:carbozzo/pages/main_pages/image_share.dart';
 import 'package:carbozzo/screens/profile/qrpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -242,6 +243,55 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(width: 8),
                         Text(
                           'Save',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 25),
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ImageGalleryPage()),
+                    );
+                  },
+                  child: Container(
+                    width: 120,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.brown,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(3.0, 3.0),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.save,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Gallery',
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             color: Colors.white,

@@ -195,6 +195,51 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   late Barcode result;
   late QRViewController controller;
 
+  Future<void> createPairingsCollection(
+      String user1Uid, String user2Uid) async {
+    // Reference to the "pairings" collection in user1's Firestore document
+    CollectionReference pairingsCollectionUser1 = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user1Uid)
+        .collection('pairings');
+
+    // Check if the pairing already exists for user1
+    QuerySnapshot querySnapshotUser1 = await pairingsCollectionUser1
+        .where('user2Uid', isEqualTo: user2Uid)
+        .get();
+
+    if (querySnapshotUser1.docs.isEmpty) {
+      // Pairing not found for user1, create a new pairing
+      pairingsCollectionUser1.add({
+        'user1Uid': user1Uid,
+        'user2Uid': user2Uid,
+        'pairingTimestamp': FieldValue.serverTimestamp(),
+        'expirationTimestamp': DateTime.now().add(Duration(days: 7)),
+      });
+    }
+
+    // Reference to the "pairings" collection in user2's Firestore document
+    CollectionReference pairingsCollectionUser2 = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user2Uid)
+        .collection('pairings');
+
+    // Check if the pairing already exists for user2
+    QuerySnapshot querySnapshotUser2 = await pairingsCollectionUser2
+        .where('user2Uid', isEqualTo: user1Uid)
+        .get();
+
+    if (querySnapshotUser2.docs.isEmpty) {
+      // Pairing not found for user2, create a new pairing
+      pairingsCollectionUser2.add({
+        'user1Uid': user2Uid,
+        'user2Uid': user1Uid,
+        'pairingTimestamp': FieldValue.serverTimestamp(),
+        'expirationTimestamp': DateTime.now().add(Duration(days: 7)),
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -216,26 +261,8 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                       builder: (BuildContext context) {
                         String? pairedUserUid = result.code;
 
-                        CollectionReference userPairingsCollection =
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(widget.userUid)
-                                .collection('pairings');
-
-                        userPairingsCollection
-                            .where('user2Uid', isEqualTo: pairedUserUid)
-                            .get()
-                            .then((querySnapshot) {
-                          if (querySnapshot.docs.isEmpty) {
-                            userPairingsCollection.add({
-                              'user1Uid': widget.userUid,
-                              'user2Uid': pairedUserUid,
-                              'pairingTimestamp': FieldValue.serverTimestamp(),
-                              'expirationTimestamp':
-                                  DateTime.now().add(Duration(days: 7)),
-                            });
-                          }
-                        });
+                        createPairingsCollection(
+                            widget.userUid, pairedUserUid!);
 
                         return AlertDialog(
                           backgroundColor: Colors.black,

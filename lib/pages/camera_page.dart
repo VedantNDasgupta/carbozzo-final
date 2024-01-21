@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CameraPage extends StatefulWidget {
@@ -133,30 +132,36 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
     }
 
     String userId = user.uid;
-    String documentId = DateTime.now().millisecondsSinceEpoch.toString();
+    String galleryId = DateTime.now().millisecondsSinceEpoch.toString();
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
 
-    CollectionReference imagesCollection = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('images');
+    CollectionReference sharedGalleryCollection =
+        FirebaseFirestore.instance.collection('shared_gallery');
 
-    File imageFile = File(pictureFile!.path);
+    DocumentReference sharedGalleryDocument =
+        await sharedGalleryCollection.add({
+      'user1_uid': userId,
+      'user2_uid': '', // Add the UID of the other user when paired
+    });
 
-    String imageUrl =
-        await _uploadImageToStorage(imageFile, userId, documentId);
+    String documentId = sharedGalleryDocument.id;
 
-    await imagesCollection.add({
+    String imageUrl = await _uploadImageToStorage(
+        File(pictureFile!.path), userId, galleryId, timestamp);
+
+    // Store metadata in the 'photos' subcollection
+    await sharedGalleryDocument.collection('photos').add({
       'imageUrl': imageUrl,
       'caption': caption,
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': timestamp,
     });
   }
 
   Future<String> _uploadImageToStorage(
-      File imageFile, String userId, String documentId) async {
+      File imageFile, String userId, String galleryId, String timestamp) async {
     try {
-      String imageName = '$documentId.jpg';
-      String imagePath = 'users/$userId/$imageName';
+      String imageName = '$timestamp.jpg';
+      String imagePath = 'shared_gallery/$galleryId/photos/$imageName';
 
       UploadTask uploadTask =
           FirebaseStorage.instance.ref().child(imagePath).putFile(imageFile);
