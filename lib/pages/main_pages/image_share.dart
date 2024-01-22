@@ -75,7 +75,15 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
         }
 
         if (!photosSnapshot.hasData || photosSnapshot.data!.docs.isEmpty) {
-          return Center(child: Text('No images found.'));
+          return Center(
+              child: Text(
+            'No images found',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ));
         }
 
         var photoDocuments = photosSnapshot.data!.docs;
@@ -199,7 +207,18 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No images found.'));
+            return Center(
+                child: Padding(
+              padding: const EdgeInsets.only(bottom: 80.0),
+              child: Text(
+                'No images found',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ));
           }
 
           var myImages = snapshot.data!.docs

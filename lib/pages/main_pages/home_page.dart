@@ -4,6 +4,7 @@ import 'package:carbozzo/components/month_summary.dart';
 import 'package:carbozzo/components/task_tile.dart';
 import 'package:carbozzo/data/habit_database.dart';
 import 'package:carbozzo/pages/camera_page.dart';
+import 'package:carbozzo/pages/main_pages/image_share.dart';
 import 'package:carbozzo/pages/share_page.dart';
 import 'package:carbozzo/pages/intro_pages/splash_page.dart';
 import 'package:carbozzo/screens/profile/profile.dart';
@@ -65,6 +66,15 @@ class _HomePageState extends State<HomePage> {
       }
     });
     db.updateDatabase();
+  }
+
+  bool isAtLeastOneTileGreen() {
+    for (int i = 0; i < db.todaysHabitList.length; i++) {
+      if (db.todaysHabitList[i][1] == true) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
@@ -369,8 +379,91 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            width: 380,
+            height: 140,
+            decoration: BoxDecoration(
+              color: Colors.teal[200],
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Colors.black,
+                width: 3, // Increase the border width
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 18,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Text(
+                    'Today\'s Eco Activities',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 18,
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ImageGalleryPage()),
+                      );
+                    },
+                    child: Container(
+                      width: 130,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent[400],
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            offset: Offset(3.0, 3.0),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Verify',
+                            style: GoogleFonts.poppins(
+                              fontSize: 21,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
 
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Container(
             width: double.infinity,
             height: 15,

@@ -10,6 +10,8 @@ class HabitDatabase {
     ["Energy Conservation", false],
     ["Recycling & Minimalism", false],
     ["Sustainable Shopping", false],
+    ["Community Involvement", false],
+    ["Virtual Sustainabilty", false],
   ];
   Map<DateTime, int> heatMapDataSet = {};
 
@@ -20,6 +22,8 @@ class HabitDatabase {
       ["Energy Conservation", false],
       ["Recycling & Minimalism", false],
       ["Sustainable Shopping", false],
+      ["Community Involvement", false],
+      ["Virtual Sustainabilty", false],
     ];
 
     _myBox.put("START_DATE", todaysDateFormatted());

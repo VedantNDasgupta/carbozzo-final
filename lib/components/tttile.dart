@@ -9,6 +9,7 @@ class MyTimeLineTile extends StatelessWidget {
   final String heading;
   final String description;
   final String points;
+  final String imagePath; // Add imagePath parameter for the image
 
   const MyTimeLineTile({
     Key? key,
@@ -18,6 +19,7 @@ class MyTimeLineTile extends StatelessWidget {
     required this.heading,
     required this.description,
     required this.points,
+    required this.imagePath,
   }) : super(key: key);
 
   @override
@@ -42,6 +44,7 @@ class MyTimeLineTile extends StatelessWidget {
         heading: heading,
         description: description,
         points: points,
+        imagePath: imagePath, // Pass the imagePath to EventCard
       ),
     );
   }

@@ -124,17 +124,22 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       handleGoogleSignIn(context);
                     },
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                        Colors.transparent,
-                        BlendMode.color,
-                      ),
-                      child: Image.asset(
-                        'lib/images/google.png',
-                        width: 100,
-                        height: 10,
-                      ),
-                    ),
+                    child: _isSigning
+                        ? CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black),
+                          )
+                        : ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              Colors.transparent,
+                              BlendMode.color,
+                            ),
+                            child: Image.asset(
+                              'lib/images/google.png',
+                              width: 100,
+                              height: 10,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -209,6 +214,10 @@ class _LoginPageState extends State<LoginPage> {
 
   // handling google sign in
   Future handleGoogleSignIn(BuildContext context) async {
+    if (_isSigning) {
+      return; // Prevent multiple sign-in attempts
+    }
+
     final sp = context.read<SignInProvider>();
     final ip = context.read<InternetProvider>();
     await ip.checkInternetConnection();
@@ -216,7 +225,15 @@ class _LoginPageState extends State<LoginPage> {
     if (ip.hasInternet == false) {
       showToast(message: "Check your Internet connection");
     } else {
+      setState(() {
+        _isSigning = true;
+      });
+
       await sp.signInWithGoogle().then((value) {
+        setState(() {
+          _isSigning = false;
+        });
+
         if (sp.hasError == true) {
           showToast(message: sp.errorCode.toString());
         } else {

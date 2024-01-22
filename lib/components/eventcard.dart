@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EventCard extends StatelessWidget {
   final bool isPast;
   final String heading;
   final String description;
   final String points;
+  final String imagePath;
 
   const EventCard({
     Key? key,
@@ -12,12 +14,13 @@ class EventCard extends StatelessWidget {
     required this.heading,
     required this.description,
     required this.points,
+    required this.imagePath,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 175,
+      height: 275, // Increased height to accommodate the image
       margin: EdgeInsets.all(25),
       padding: EdgeInsets.all(25),
       decoration: BoxDecoration(
@@ -39,30 +42,52 @@ class EventCard extends StatelessWidget {
         children: [
           Text(
             heading,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                fontSize: 21,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          SizedBox(height: 3),
+          SizedBox(height: 6),
           Row(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.only(right: 1), // Adjusted left margin
-                child: Icon(Icons.star, color: Colors.amber, size: 20),
+                padding: const EdgeInsets.only(right: 1),
+                child: Icon(Icons.star, color: Colors.black, size: 20),
               ),
               SizedBox(width: 3),
               Text(
                 points,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ],
           ),
           SizedBox(height: 10),
           Text(
             description,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: GoogleFonts.montserrat(
+              textStyle: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
+          // Added Image widget
+          Image.asset(
+            imagePath,
+            height: 90, // Adjust the height as needed
+            width: double.infinity,
+            fit: BoxFit.cover,
           ),
         ],
       ),

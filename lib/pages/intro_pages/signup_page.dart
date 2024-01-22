@@ -137,17 +137,22 @@ class _SignUpPageState extends State<SignUpPage> {
                     onTap: () {
                       handleGoogleSignIn(context);
                     },
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                        Colors.transparent, // Adjust the filter color as needed
-                        BlendMode.color, // Adjust the blend mode as needed
-                      ),
-                      child: Image.asset(
-                        'lib/images/google.png',
-                        width: 100, // Adjust the width as needed
-                        height: 10, // Adjust the height as needed
-                      ),
-                    ),
+                    child: isSigningUp
+                        ? CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black),
+                          )
+                        : ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              Colors.transparent,
+                              BlendMode.color,
+                            ),
+                            child: Image.asset(
+                              'lib/images/google.png',
+                              width: 100,
+                              height: 10, // Adjust the height as needed
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -209,6 +214,7 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() {
       isSigningUp = false;
     });
+
     if (user != null) {
       showToast(message: "Account successfully created!");
       Navigator.push(
@@ -222,6 +228,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
   // handling google sign in
   Future handleGoogleSignIn(BuildContext context) async {
+    if (isSigningUp) {
+      return; // Prevent multiple sign-in attempts
+    }
+
     final sp = context.read<SignInProvider>();
     final ip = context.read<InternetProvider>();
     await ip.checkInternetConnection();
@@ -229,7 +239,15 @@ class _SignUpPageState extends State<SignUpPage> {
     if (ip.hasInternet == false) {
       showToast(message: "Check your Internet connection");
     } else {
+      setState(() {
+        isSigningUp = true;
+      });
+
       await sp.signInWithGoogle().then((value) {
+        setState(() {
+          isSigningUp = false;
+        });
+
         if (sp.hasError == true) {
           showToast(message: sp.errorCode.toString());
         } else {

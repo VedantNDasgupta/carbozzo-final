@@ -1,24 +1,26 @@
-import 'package:carbozzo/datetime/date_time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 
 class MonthlySummary extends StatelessWidget {
   final Map<DateTime, int>? datasets;
-  final String startDate;
 
   const MonthlySummary({
-    super.key,
+    Key? key,
     required this.datasets,
-    required this.startDate,
-  });
+    required startDate,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    DateTime firstDayOfCurrentMonth = DateTime.now().subtract(
+      Duration(days: DateTime.now().day - 1),
+    );
+
     return Container(
-      padding: const EdgeInsets.only(top: 3, bottom: 3, left: 30),
+      padding: const EdgeInsets.only(top: 3, bottom: 3, left: 20),
       child: HeatMap(
-        startDate: createDateTimeObject(startDate),
-        endDate: DateTime.now().add(Duration(days: 30)),
+        startDate: firstDayOfCurrentMonth,
+        endDate: firstDayOfCurrentMonth.add(Duration(days: 30)),
         datasets: datasets,
         colorMode: ColorMode.color,
         defaultColor: Colors.red,

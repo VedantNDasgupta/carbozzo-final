@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -95,19 +97,43 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
       context: context,
       builder: (BuildContext context) {
         String caption = '';
+        double dialogHeight = MediaQuery.of(context).size.height * 0.7;
 
         return AlertDialog(
-          content: Column(
-            children: [
-              Image.file(File(pictureFile!.path)),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: (value) {
-                  caption = value;
-                },
-                decoration: InputDecoration(labelText: 'Enter Caption'),
-              ),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: Image.file(
+                    File(pictureFile!.path),
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height:
+                        dialogHeight * 0.6, // Adjust the image preview height
+                  ),
+                ),
+                SizedBox(height: 25),
+                TextField(
+                  onChanged: (value) {
+                    caption = value;
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Enter Caption',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           actions: [
             ElevatedButton(
@@ -115,7 +141,15 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
                 await _uploadImageToFirestore(caption);
                 Navigator.of(context).pop();
               },
-              child: Text('Upload'),
+              style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                  elevation: 10,
+                  alignment: AlignmentGeometry.lerp(
+                      Alignment.center, Alignment.center, 1)),
+              child: Text(
+                'Upload',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -146,15 +180,55 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
 
     String documentId = sharedGalleryDocument.id;
 
-    String imageUrl = await _uploadImageToStorage(
-        File(pictureFile!.path), userId, galleryId, timestamp);
+    ProgressDialog progressDialog = ProgressDialog(context);
+    progressDialog.style(
+      message: 'Uploading image',
+      progressWidget: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+        color: Colors.black,
+      ),
+    );
+    progressDialog.show();
 
-    // Store metadata in the 'photos' subcollection
-    await sharedGalleryDocument.collection('photos').add({
-      'imageUrl': imageUrl,
-      'caption': caption,
-      'timestamp': timestamp,
-    });
+    try {
+      String imageUrl = await _uploadImageToStorage(
+        File(pictureFile!.path),
+        userId,
+        galleryId,
+        timestamp,
+      );
+
+      // Store metadata in the 'photos' subcollection
+      await sharedGalleryDocument.collection('photos').add({
+        'imageUrl': imageUrl,
+        'caption': caption,
+        'timestamp': timestamp,
+      });
+
+      // Close the loading screen
+      progressDialog.hide();
+
+      // Display toast
+      Fluttertoast.showToast(
+        msg: 'Image uploaded successfully!',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } catch (e) {
+      // Close the loading screen on error
+      progressDialog.hide();
+
+      // Display error toast
+      Fluttertoast.showToast(
+        msg: 'Error uploading image: $e',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
   }
 
   Future<String> _uploadImageToStorage(
@@ -184,88 +258,92 @@ class _CameraPageState extends State<CameraPage> with TickerProviderStateMixin {
     }
     return Scaffold(
       backgroundColor: Colors.red,
-      body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30.0, right: 15, left: 15),
-            child: Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 30.0, right: 15, left: 15),
+              child: Center(
                 child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Colors.amber),
-                    child: CameraPreview(controller)),
+                    child: CameraPreview(controller),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(top: 20.0, left: 10, right: 10, bottom: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GestureDetector(
-                onTap: _onToggleFlashPressed,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      isFlashOn ? Icons.flash_on : Icons.flash_off,
-                      color: Colors.black,
-                      size: 25,
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 20.0, left: 10, right: 10, bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                  onTap: _onToggleFlashPressed,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        isFlashOn ? Icons.flash_on : Icons.flash_off,
+                        color: Colors.black,
+                        size: 25,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: _onCaptureButtonPressed,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      Icons.camera,
-                      color: Colors.black,
-                      size: 25,
+                GestureDetector(
+                  onTap: _onCaptureButtonPressed,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.camera,
+                        color: Colors.black,
+                        size: 25,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: _onFlipCameraPressed,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      Icons.switch_camera_rounded,
-                      color: Colors.black,
-                      size: 25,
+                GestureDetector(
+                  onTap: _onFlipCameraPressed,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Icon(
+                        Icons.switch_camera_rounded,
+                        color: Colors.black,
+                        size: 25,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

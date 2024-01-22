@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:carbozzo/pages/main_pages/image_share.dart';
 import 'package:carbozzo/screens/community_groups/cg_1.dart';
 import 'package:carbozzo/screens/community_groups/cg_2.dart';
 import 'package:carbozzo/screens/community_groups/cg_3.dart';
@@ -285,9 +286,8 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+
+                    SizedBox(height: 25),
                     // Leaderboard Container
 
                     Container(
