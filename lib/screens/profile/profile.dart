@@ -1,6 +1,7 @@
 import 'package:carbozzo/components/toast.dart';
 import 'package:carbozzo/pages/intro_pages/login_page.dart';
 import 'package:carbozzo/pages/main_pages/image_share.dart';
+import 'package:carbozzo/pages/passkey.dart';
 import 'package:carbozzo/screens/profile/qrpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -408,7 +409,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: 25),
 
-              // Example: Another button with fixed width and height
+              // Delete button
               Center(
                 child: GestureDetector(
                   onTap: () async {},
@@ -451,8 +452,60 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
+              SizedBox(height: 25),
+
+              // Delete button
+              Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PasskeyPage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 180,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.teal,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(3.0, 3.0),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.password_rounded,
+                          color: Colors.white,
+                          size: 26,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Enter Passkey',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
-                height: 1,
+                height: 5,
               ),
             ],
           ),
