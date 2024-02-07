@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:carbozzo/components/carbopoints_database.dart';
 import 'package:carbozzo/pages/main_pages/image_share.dart';
 import 'package:carbozzo/screens/community_groups/cg_1.dart';
 import 'package:carbozzo/screens/community_groups/cg_2.dart';
@@ -212,6 +213,109 @@ class _CommunityPageState extends State<CommunityPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Text(
+                      'Carbopoints',
+                      style: GoogleFonts.raleway(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5.0),
+                      child: SizedBox(
+                        width: 380,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                width: 170,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white60,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 2, // Increase the border width
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 18, left: 18),
+                                  child: Center(
+                                    child: Text(
+                                      '${CarbopointsDatabase.carbopoints}', // Display the value of carbopoints variable using CarbopointsDatabase
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 50,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors
+                                            .black, // Change text color to black
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Container(
+                                width: 170,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white60,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 18, right: 1, left: 1),
+                                        child: Center(
+                                          child: Text(
+                                            'Next Milestone',
+                                            style: GoogleFonts.raleway(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          _getNextMilestoneText(
+                                              CarbopointsDatabase.carbopoints),
+                                          style: GoogleFonts.raleway(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Text(
                       'Climate Groups Near You',
                       style: GoogleFonts.raleway(
@@ -686,6 +790,20 @@ class _CommunityPageState extends State<CommunityPage> {
         ),
       ),
     );
+  }
+
+  String _getNextMilestoneText(int carbopoints) {
+    if (carbopoints < 1000) {
+      return '1k';
+    } else if (carbopoints < 5000) {
+      return '5k';
+    } else if (carbopoints < 10000) {
+      return '10k';
+    } else if (carbopoints < 25000) {
+      return '25k';
+    } else {
+      return '50k';
+    }
   }
 
   Widget promoCard(image) {
