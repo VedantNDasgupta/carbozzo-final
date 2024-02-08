@@ -127,6 +127,7 @@ class SignInProvider extends ChangeNotifier {
       "uid": _uid,
       "image_url": _imageUrl,
       "provider": _provider,
+      "carbopoints": 0,
     });
     notifyListeners();
   }

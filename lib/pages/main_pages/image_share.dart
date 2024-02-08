@@ -1,4 +1,4 @@
-import 'package:carbozzo/components/carbopoints_database.dart';
+import 'package:carbozzo/components/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -77,20 +77,20 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
 
         if (!photosSnapshot.hasData || photosSnapshot.data!.docs.isEmpty) {
           return Center(
-              child: Text(
-            'No images found',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
+            child: Text(
+              'No images found',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
-          ));
+          );
         }
 
         var photoDocuments = photosSnapshot.data!.docs;
 
-        // Check if the images belong to your partner and are displayed under "Partner's Images"
-        var isPartnerImage = document.get('user1_uid') != currentUser.uid;
+        var isPartnerImage = document.data()!['user1_uid'] != currentUser.uid;
 
         return Hero(
           tag: document.id,
@@ -137,6 +137,47 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
                         style: TextStyle(fontSize: 16),
                       ),
                       SizedBox(height: 1),
+                      GestureDetector(
+                        onTap: () async {
+                          if (isPartnerImage) {
+                            var user2Uid = await _getPartnerPairings()
+                                .then((pairingsSnapshot) {
+                              String user2Uid = "";
+                              pairingsSnapshot.docs.forEach((pairingDoc) {
+                                user2Uid = pairingDoc.data()['user2Uid'];
+                              });
+                              return user2Uid;
+                            });
+
+                            await approveImageProof(user2Uid);
+                            showToast(message: 'Image Proof ACCEPTED');
+                          } else {
+                            showToast(message: 'Image Proof REJECTED');
+                          }
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 150,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: isPartnerImage ? Colors.green : Colors.red,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              isPartnerImage ? 'Accept' : 'Reject',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   );
                 },
@@ -174,6 +215,13 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
     ];
   }
 
+  Future<void> approveImageProof(String user2uid) async {
+    // Increment 'carbopoints' field in the document of user2uid
+    await FirebaseFirestore.instance.collection('users').doc(user2uid).update({
+      'carbopoints': FieldValue.increment(1),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,17 +257,18 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return Center(
-                child: Padding(
-              padding: const EdgeInsets.only(bottom: 80.0),
-              child: Text(
-                'No images found',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 80.0),
+                child: Text(
+                  'No images found',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ));
+            );
           }
 
           var myImages = snapshot.data!.docs
@@ -242,7 +291,7 @@ class _ImageGalleryPageState extends State<ImageGalleryPage> {
               var partnerImages = <Widget>[];
 
               for (var pairingDocument in partnerPairingsSnapshot.data!.docs) {
-                var user2Uid = pairingDocument.get('user2Uid');
+                var user2Uid = pairingDocument.data()['user2Uid'];
                 var partnerImagesStream = FirebaseFirestore.instance
                     .collection('shared_gallery')
                     .where('user1_uid', isEqualTo: user2Uid)
@@ -326,14 +375,21 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
   // Function to show a toast message
   void showToast(String message) {
     Fluttertoast.showToast(
-      msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 0,
       backgroundColor: Colors.blue,
       textColor: Colors.black,
       fontSize: 16.0,
+      msg: '',
     );
+  }
+
+  Future<void> approveImageProof(String user2uid) async {
+    // Increment 'carbopoints' field in the document of user2uid
+    await FirebaseFirestore.instance.collection('users').doc(user2uid).update({
+      'carbopoints': FieldValue.increment(1),
+    });
   }
 
   @override
@@ -428,11 +484,10 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           showToast('Image Proof ACCEPTED');
-                          {
-                            Navigator.pop(context);
-                          }
+
+                          Navigator.pop(context);
                         },
                         child: Container(
                           width: 150,

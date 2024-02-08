@@ -11,7 +11,10 @@ class FirebaseAuthService {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      //add user details
+
+      // Add user details including carbopoints
+      await addUserDetails(credential.user!.uid, email);
+
       return credential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -23,10 +26,11 @@ class FirebaseAuthService {
     return null;
   }
 
-  Future addUserDetails(String name, String email) async {
-    await FirebaseFirestore.instance.collection('users').add({
-      'name': name,
+  Future addUserDetails(String uid, String email) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'name': '', // Add name if available
       'email': email,
+      'carbopoints': 0, // Default initial value for carbopoints
     });
   }
 

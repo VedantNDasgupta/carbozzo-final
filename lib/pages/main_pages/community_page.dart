@@ -285,7 +285,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                           child: Text(
                                             'Next Milestone',
                                             style: GoogleFonts.raleway(
-                                              fontSize: 15,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
                                             ),
@@ -297,8 +297,8 @@ class _CommunityPageState extends State<CommunityPage> {
                                           _getNextMilestoneText(
                                               CarbopointsDatabase.carbopoints),
                                           style: GoogleFonts.raleway(
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w800,
                                             color: Colors.black,
                                           ),
                                         ),

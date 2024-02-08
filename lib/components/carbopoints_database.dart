@@ -7,23 +7,25 @@ class CarbopointsDatabase {
 
   static Future<void> fetchCarbopoints(String userId) async {
     try {
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .get();
 
       if (userSnapshot.exists) {
-        // Get the value of carbopoints field
-        _carbopoints = userSnapshot['carbopoints'] ?? 0;
+        _carbopoints = userSnapshot.data()?['carbopoints'] ?? 0;
+        print('Fetched carbopoints: $_carbopoints'); // Print the fetched value
       } else {
         print('User document does not exist');
+        _carbopoints = 0; // Reset carbopoints if user document doesn't exist
       }
     } catch (e) {
       print('Error fetching carbopoints: $e');
+      _carbopoints = 0; // Reset carbopoints if an error occurs
     }
-  }
 
-  static void incrementCarbopoints() {
-    _carbopoints++;
+    // Print the current value of carbopoints after fetching
+    print('Current value of carbopoints: $_carbopoints');
   }
 }
