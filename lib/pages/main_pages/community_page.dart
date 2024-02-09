@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:carbozzo/components/carbopoints_database.dart';
+import 'package:carbozzo/components/carbos_manager.dart';
 import 'package:carbozzo/pages/main_pages/image_share.dart';
 import 'package:carbozzo/screens/community_groups/cg_1.dart';
 import 'package:carbozzo/screens/community_groups/cg_2.dart';
@@ -33,10 +33,19 @@ class _CommunityPageState extends State<CommunityPage> {
     'Indian Institute of Technology Roorkee',
     'Indian Institute of Technology Guwahati'
   ];
+  late CarbosManager _carbosManager;
 
   @override
   void initState() {
     super.initState();
+    _carbosManager = CarbosManager(); // Initialize CarbosManager
+    _fetchCarbos(); // Fetch carbos data
+  }
+
+  Future<void> _fetchCarbos() async {
+    await _carbosManager.fetchUserId(); // Fetch user ID
+    await _carbosManager.fetchCarbos(); // Fetch carbos data
+    setState(() {}); // Update UI
   }
 
   int initialPoints = 5000;
@@ -246,7 +255,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                       right: 18, left: 18),
                                   child: Center(
                                     child: Text(
-                                      '${CarbopointsDatabase.carbopoints}', // Display the value of carbopoints variable using CarbopointsDatabase
+                                      '${_carbosManager.carbos}', // Display the value of carbos variable using _carbosManager
                                       style: GoogleFonts.raleway(
                                         fontSize: 50,
                                         fontWeight: FontWeight.bold,
@@ -295,7 +304,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                       Center(
                                         child: Text(
                                           _getNextMilestoneText(
-                                              CarbopointsDatabase.carbopoints),
+                                              _carbosManager.carbos),
                                           style: GoogleFonts.raleway(
                                             fontSize: 25,
                                             fontWeight: FontWeight.w800,

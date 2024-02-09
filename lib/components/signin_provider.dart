@@ -34,6 +34,9 @@ class SignInProvider extends ChangeNotifier {
   String? _imageUrl;
   String? get imageUrl => _imageUrl;
 
+  int? _carbopoints;
+  int? get carbopoints => _carbopoints;
+
   SignInProvider() {
     checkSignInUser();
   }
@@ -127,7 +130,7 @@ class SignInProvider extends ChangeNotifier {
       "uid": _uid,
       "image_url": _imageUrl,
       "provider": _provider,
-      "carbopoints": 0,
+      "carbopoints": '3',
     });
     notifyListeners();
   }
@@ -142,13 +145,15 @@ class SignInProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getDataFromSharedPreferences() async {
+  Future<void> getDataFromSharedPreferences() async {
     final SharedPreferences s = await SharedPreferences.getInstance();
     _name = s.getString('name');
     _email = s.getString('email');
     _imageUrl = s.getString('image_url');
     _uid = s.getString('uid');
     _provider = s.getString('provider');
+    _carbopoints =
+        s.getInt('carbopoints') ?? 0; // Fetch 'carbopoints' as an integer
     notifyListeners();
   }
 
