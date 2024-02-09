@@ -1,13 +1,94 @@
-import 'package:carbozzo/components/tttile.dart';
+import 'package:carbozzo/components/carbos_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:carbozzo/components/tttile.dart'; // Import MyTimeLineTile
 
-class TimelineScreen extends StatelessWidget {
+class TimelineScreen extends StatefulWidget {
   TimelineScreen({Key? key}) : super(key: key);
 
   @override
+  _TimelineScreenState createState() => _TimelineScreenState();
+}
+
+class _TimelineScreenState extends State<TimelineScreen> {
+  // Instantiate the CarbosManager class
+  late CarbosManager _carbosManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _carbosManager = CarbosManager(); // Initialize CarbosManager
+    _fetchCarbos(); // Fetch carbos data
+  }
+
+  Future<void> _fetchCarbos() async {
+    await _carbosManager.fetchUserId(); // Fetch user ID
+    await _carbosManager.fetchCarbos(); // Fetch carbos data
+    setState(() {}); // Update UI
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Get the current value of carbos from the CarbosManager instance
+    int carbos = _carbosManager.carbos;
+
+    // List of MyTimeLineTile widgets
+    List<MyTimeLineTile> timelineTiles = [
+      MyTimeLineTile(
+        achieved: false,
+        heading: 'Tier 1',
+        description: '50% off any desired Udemy course',
+        points: '1000 Carbopoints',
+        imagePath: 'lib/images/udemy.png',
+        carbos: 1000, // Add the value of carbos for Tier 1
+      ),
+      MyTimeLineTile(
+        achieved: false,
+        heading: 'Tier 2',
+        description: '₹500/- Zomato Gift Cards',
+        points: '5000 Carbopoints',
+        imagePath: 'lib/images/zomato.png',
+        carbos: 5000, // Add the value of carbos for Tier 2
+      ),
+      MyTimeLineTile(
+        achieved: false,
+        heading: 'Tier 3',
+        description: '1 month free Netflix subscription',
+        points: '10000 Carbopoints',
+        imagePath: 'lib/images/netflix.png',
+        carbos: 10000, // Add the value of carbos for Tier 3
+      ),
+      MyTimeLineTile(
+        achieved: false,
+        heading: 'Tier 4',
+        description: '₹1000/- Amazon Gift Cards',
+        points: '25000 Carbopoints',
+        imagePath: 'lib/images/amazon.png',
+        carbos: 25000, // Add the value of carbos for Tier 4
+      ),
+      MyTimeLineTile(
+        achieved: false,
+        heading: 'Tier 5',
+        description: 'Noise Midnight Blue Color Smartwatch',
+        points: '50000 Carbopoints',
+        imagePath: 'lib/images/smartwatch.png',
+        carbos: 50000, // Add the value of carbos for Tier 5
+      ),
+    ];
+
+    // Update 'achieved' boolean based on 'carbos' value
+    for (int i = 0; i < timelineTiles.length; i++) {
+      if (carbos >= timelineTiles[i].carbos) {
+        timelineTiles[i] = MyTimeLineTile(
+          achieved: true,
+          heading: timelineTiles[i].heading,
+          description: timelineTiles[i].description,
+          points: timelineTiles[i].points,
+          imagePath: timelineTiles[i].imagePath,
+          carbos: timelineTiles[i].carbos,
+        );
+      }
+    }
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(198, 40, 40, 1),
       appBar: AppBar(
@@ -18,17 +99,12 @@ class TimelineScreen extends StatelessWidget {
             Navigator.pop(context);
           },
           icon: const Icon(
-            Ionicons.chevron_back,
+            Icons.chevron_left,
             color: Colors.white,
           ),
         ),
         title: Padding(
           padding: const EdgeInsets.only(left: 50, top: 20),
-          child: Text(
-            'Carbo Roadmap',
-            style: GoogleFonts.poppins(
-                fontSize: 23, color: Colors.white, fontWeight: FontWeight.w600),
-          ),
         ),
         toolbarHeight: 45,
         bottom: PreferredSize(
@@ -57,56 +133,7 @@ class TimelineScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: ListView(
-            children: [
-              //start
-              MyTimeLineTile(
-                isFirst: true,
-                isLast: false,
-                isPast: true,
-                heading: 'Tier 1',
-                description: '50% off any desired Udemy course',
-                points: '1000 Carbopoints',
-                imagePath: 'lib/images/udemy.png',
-              ),
-              //middle
-              MyTimeLineTile(
-                isFirst: false,
-                isLast: false,
-                isPast: true,
-                heading: 'Tier 2',
-                description: '₹500/- Zomato Gift Cards',
-                points: '5000 Carbopoints',
-                imagePath: 'lib/images/zomato.png',
-              ),
-              MyTimeLineTile(
-                isFirst: false,
-                isLast: false,
-                isPast: true,
-                heading: 'Tier 3',
-                description: '1 month free Netflix subscription',
-                points: '10000 Carbopoints',
-                imagePath: 'lib/images/netflix.png',
-              ),
-              MyTimeLineTile(
-                isFirst: false,
-                isLast: false,
-                isPast: true,
-                heading: 'Tier 4',
-                description: '₹1000/- Amazon Gift Cards',
-                points: '25000 Carbopoints',
-                imagePath: 'lib/images/amazon.png',
-              ),
-              //end
-              MyTimeLineTile(
-                isFirst: false,
-                isLast: true,
-                isPast: false,
-                heading: 'Tier 5',
-                description: 'Noise Midnight Blue Color Smartwatch',
-                points: '50000 Carbopoints',
-                imagePath: 'lib/images/smartwatch.png',
-              ),
-            ],
+            children: timelineTiles,
           ),
         ),
       ),
@@ -117,7 +144,7 @@ class TimelineScreen extends StatelessWidget {
           ),
         ),
         child: Container(
-          height: 30,
+          height: 50,
           color: Colors.black,
           padding: const EdgeInsets.only(left: 60),
         ),

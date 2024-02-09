@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class MyTimeLineTile extends StatelessWidget {
-  final bool isFirst;
-  final bool isLast;
-  final bool isPast;
+  final int carbos;
+  final bool achieved;
   final String heading;
   final String description;
   final String points;
@@ -13,9 +12,8 @@ class MyTimeLineTile extends StatelessWidget {
 
   const MyTimeLineTile({
     Key? key,
-    required this.isFirst,
-    required this.isLast,
-    required this.isPast,
+    required this.carbos,
+    required this.achieved,
     required this.heading,
     required this.description,
     required this.points,
@@ -25,22 +23,20 @@ class MyTimeLineTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TimelineTile(
-      isFirst: isFirst,
-      isLast: isLast,
       beforeLineStyle: LineStyle(
-        color: isPast ? Colors.teal : Colors.redAccent.shade100,
+        color: achieved ? Colors.teal : Colors.redAccent.shade100,
         thickness: 6,
       ),
       indicatorStyle: IndicatorStyle(
         width: 40,
-        color: isPast ? Colors.teal : Colors.redAccent.shade100,
+        color: achieved ? Colors.teal : Colors.redAccent.shade100,
         iconStyle: IconStyle(
-          iconData: Icons.done,
+          iconData: achieved ? Icons.done : Icons.circle_outlined,
           color: Colors.white,
         ),
       ),
       endChild: EventCard(
-        isPast: isPast,
+        isPast: achieved,
         heading: heading,
         description: description,
         points: points,

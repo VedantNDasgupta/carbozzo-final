@@ -243,7 +243,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                 width: 170,
                                 height: 100,
                                 decoration: BoxDecoration(
-                                  color: Colors.white60,
+                                  color: Colors.teal[500],
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: Colors.black,
@@ -257,10 +257,10 @@ class _CommunityPageState extends State<CommunityPage> {
                                     child: Text(
                                       '${_carbosManager.carbos}', // Display the value of carbos variable using _carbosManager
                                       style: GoogleFonts.raleway(
-                                        fontSize: 50,
+                                        fontSize: 35,
                                         fontWeight: FontWeight.bold,
                                         color: Colors
-                                            .black, // Change text color to black
+                                            .white, // Change text color to black
                                       ),
                                     ),
                                   ),
@@ -273,7 +273,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                 width: 170,
                                 height: 100,
                                 decoration: BoxDecoration(
-                                  color: Colors.white60,
+                                  color: Colors.amber[300],
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: Colors.black,
