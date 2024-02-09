@@ -107,8 +107,15 @@ class _SharePageState extends State<SharePage> {
                 margin:
                     EdgeInsets.only(left: 30, right: 30, top: 150, bottom: 170),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(20),
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white,
+                      Colors.white70,
+                    ],
+                    radius: 1.5,
+                    center: Alignment.topRight,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
                   border: Border.all(
                     color: Colors.black,
                     width: 2,
@@ -116,7 +123,7 @@ class _SharePageState extends State<SharePage> {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black,
-                      offset: Offset(6.0, 6.0),
+                      offset: Offset(0.0, 6.0),
                     ),
                   ],
                 ),

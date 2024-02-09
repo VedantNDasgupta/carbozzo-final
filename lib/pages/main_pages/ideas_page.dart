@@ -39,7 +39,14 @@ class _IdeasPageState extends State<IdeasPage> {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.redAccent,
+                      Colors.tealAccent,
+                    ],
+                    radius: 3,
+                    center: Alignment.topRight,
+                  ),
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(30)),
                   border: Border.all(

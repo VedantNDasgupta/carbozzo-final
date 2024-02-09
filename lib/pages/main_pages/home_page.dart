@@ -88,7 +88,14 @@ class _HomePageState extends State<HomePage> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white,
+              gradient: RadialGradient(
+                colors: [
+                  Colors.redAccent,
+                  Colors.tealAccent,
+                ],
+                radius: 3,
+                center: Alignment.topRight,
+              ),
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
               border: Border.all(
                 color: Colors.black,
@@ -192,8 +199,15 @@ class _HomePageState extends State<HomePage> {
           Container(
             margin: EdgeInsets.only(left: 20, right: 20),
             decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(20),
+              gradient: RadialGradient(
+                colors: [
+                  Colors.white,
+                  Colors.white70,
+                ],
+                radius: 1.5,
+                center: Alignment.topRight,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(30)),
               border: Border.all(
                 color: Colors.black,
                 width: 2,
@@ -201,7 +215,7 @@ class _HomePageState extends State<HomePage> {
               boxShadow: [
                 BoxShadow(
                   color: Colors.black,
-                  offset: Offset(6.0, 6.0),
+                  offset: Offset(0.0, 6.0),
                 ),
               ],
             ),
