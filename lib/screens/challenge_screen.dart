@@ -1,11 +1,15 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:carbozzo/pages/game.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
 class ChallengeScreen extends StatelessWidget {
   ChallengeScreen({Key? key}) : super(key: key);
+  CarboQuest game = CarboQuest();
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +80,35 @@ class ChallengeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            GameWidget(game: kDebugMode ? CarboQuest() : game),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: Offset(6.0, 6.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 15),
                 Text(
                   'Rewards',
                   style: GoogleFonts.poppins(
@@ -107,7 +140,7 @@ class ChallengeScreen extends StatelessWidget {
               ),
             ),
             child: Container(
-                height: 30,
+                height: 10,
                 color: Colors.black,
                 padding: const EdgeInsets.only(left: 60))));
   }

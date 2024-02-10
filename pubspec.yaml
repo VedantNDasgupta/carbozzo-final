@@ -41,6 +41,8 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_messaging: ^14.7.10
   firebase_storage: ^11.6.0
+  flame: ^1.15.0
+  flame_tiled: ^1.18.4
   flutter:
     sdk: flutter
   flutter_colorpicker: ^0.5.0
@@ -120,6 +122,8 @@ flutter:
   assets:
     - lib/images/
     - lib/components/campus_list.json
+    - assets/tiles/
+    - assets/images/Terrain/
     #   - images/a_dot_ham.jpeg
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware

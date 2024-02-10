@@ -425,6 +425,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  flame:
+    dependency: "direct main"
+    description:
+      name: flame
+      sha256: "2a2352741500ce47823dcf212f06b23e9bdb622454eab90244ee6da58e23b488"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.15.0"
+  flame_tiled:
+    dependency: "direct main"
+    description:
+      name: flame_tiled
+      sha256: "5c8a30d8bd1f09a40bb37527c1aa17758800848cd0d561bb963134cfb621fd6b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.18.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -960,6 +976,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  ordered_set:
+    dependency: transitive
+    description:
+      name: ordered_set
+      sha256: "3858c7d84619edfab87c3e367584648020903187edb70b52697646f4b2a93022"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
   packages_extensions:
     dependency: transitive
     description:
@@ -1429,6 +1453,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.1"
+  tiled:
+    dependency: transitive
+    description:
+      name: tiled
+      sha256: "988a57a07df280bb4a5d722c9e400b282d8d9a652b5a2afc8b68e1308bbf8222"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.2"
   timeline_tile:
     dependency: "direct main"
     description:
