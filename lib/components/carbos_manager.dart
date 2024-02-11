@@ -32,8 +32,7 @@ class CarbosManager {
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
       if (data != null && data.containsKey('carbopoints')) {
-        // Parse the value as an integer
-        carbos = int.tryParse(data['carbopoints'] ?? '') ?? 0;
+        carbos = data['carbopoints'] ?? 0;
       }
     } catch (e) {
       print('Error fetching carbopoints: $e');
