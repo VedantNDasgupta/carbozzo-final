@@ -1,4 +1,4 @@
-import 'package:carbozzo/pages/game.dart';
+import 'package:carbozzo/pages/Game/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
