@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:carbozzo/pages/Game/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';

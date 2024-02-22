@@ -8,52 +8,43 @@ class EnemyManager extends Component with HasGameReference<CarboQuest> {
   late Timer _timer;
   SpriteSheet spriteSheet;
   Random random = Random();
+  double elapsedTime = 0.0; // Variable to track elapsed time
 
   EnemyManager({required this.spriteSheet}) : super() {
-    _timer = Timer(0.8, onTick: _spawnEnemy, repeat: true);
+    _timer = Timer(1.5, onTick: _spawnEnemy, repeat: true);
   }
 
   void _spawnEnemy() {
     Vector2 initialSize = Vector2(64, 64);
-
-    // Spawn from left side
-    Vector2 leftPosition = Vector2(-120, -450);
-    // Spawn from right side
-    Vector2 rightPosition = Vector2(120, -450);
+    double minX = -150;
+    double maxX = 150;
 
     if (game.buildContext != null) {
-      Enemy leftEnemy = Enemy(
-        sprite: spriteSheet.getSpriteById(3),
-        size: initialSize,
-        position: leftPosition,
-      );
+      double randomX1 = minX + random.nextDouble() * (maxX - minX);
 
-      leftEnemy.anchor = Anchor.center;
-      game.world.add(leftEnemy);
+      // Randomly choose between two enemy types
+      int enemyType = random.nextInt(2) + 1;
 
-      Enemy rightEnemy = Enemy(
-        sprite: spriteSheet.getSpriteById(3),
-        size: initialSize,
-        position: rightPosition,
-      );
+      Enemy enemy;
+      Sprite sprite = spriteSheet.getSpriteById(enemyType);
 
-      rightEnemy.anchor = Anchor.center;
-      game.world.add(rightEnemy);
+      if (enemyType == 1) {
+        enemy = EnemyType1(
+          sprite: sprite,
+          size: initialSize,
+          position: Vector2(randomX1, -450),
+        );
+      } else {
+        enemy = EnemyType2(
+          sprite: sprite,
+          size: initialSize,
+          position: Vector2(randomX1, -450),
+        );
+      }
+
+      enemy.anchor = Anchor.center;
+      game.world.add(enemy);
     }
-  }
-
-  int mapScoreToMaxEnemyLevel(int score) {
-    int level = 1;
-
-    if (score > 1500) {
-      level = 4;
-    } else if (score > 500) {
-      level = 3;
-    } else if (score > 100) {
-      level = 2;
-    }
-
-    return level;
   }
 
   @override
@@ -71,6 +62,16 @@ class EnemyManager extends Component with HasGameReference<CarboQuest> {
   @override
   void update(double dt) {
     super.update(dt);
+
+    // Update elapsed time
+    elapsedTime += dt;
+
+    // Check if 10 seconds have elapsed, and update timer duration
+    if (elapsedTime >= 30 && _timer.limit > 0.8) {
+      _timer.limit -= 0.1;
+      elapsedTime -= 10; // Reset elapsed time
+    }
+
     _timer.update(dt);
   }
 

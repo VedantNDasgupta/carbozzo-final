@@ -7,10 +7,13 @@ import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
-class CarboQuest extends FlameGame with HorizontalDragDetector {
+class CarboQuest extends FlameGame
+    with HorizontalDragDetector, HasCollisionDetection {
   late Player player;
   Offset? _pointerStartPosition;
   Vector2 fixedResolution = Vector2(400, 960);
+  late TextComponent _playerScore;
+  late TextComponent _playerHealth;
 
   @override
   FutureOr<void> onLoad() async {
@@ -31,6 +34,38 @@ class CarboQuest extends FlameGame with HorizontalDragDetector {
 
     EnemyManager enemyManager = EnemyManager(spriteSheet: spriteSheet);
     add(enemyManager);
+
+    //Text component for player score.
+    _playerScore = TextComponent(
+      text: 'Score: 0',
+      position: Vector2(30, 30),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontFamily: 'BungeeInline',
+        ),
+      ),
+    );
+
+    //text component for player health.
+    _playerHealth = TextComponent(
+      text: 'Health: 100%',
+      position: Vector2(fixedResolution.x - 30, 30),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontFamily: 'BungeeInline',
+        ),
+      ),
+    );
+
+    // Anchor to top right as we want the top right
+    // corner of this component to be at a specific position.
+    add(_playerHealth);
+    _playerHealth.anchor = Anchor.topRight;
+    add(_playerScore);
   }
 
   @override
@@ -42,8 +77,13 @@ class CarboQuest extends FlameGame with HorizontalDragDetector {
   void onHorizontalDragUpdate(DragUpdateInfo info) {
     final pointerCurrentPosition = info.raw.globalPosition;
 
-    var delta = pointerCurrentPosition.dx - _pointerStartPosition!.dx;
-    player.setMoveDirection(Vector2(delta, 0));
+    // Check if the finger has moved
+    if (pointerCurrentPosition != _pointerStartPosition) {
+      var delta = pointerCurrentPosition.dx - _pointerStartPosition!.dx;
+      player.setMoveDirection(Vector2(delta, 0));
+    } else {
+      player.setMoveDirection(Vector2.zero());
+    }
   }
 
   @override
