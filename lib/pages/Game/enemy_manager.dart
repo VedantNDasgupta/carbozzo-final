@@ -6,7 +6,7 @@ import 'enemy.dart';
 
 class EnemyManager extends Component with HasGameReference<CarboQuest> {
   late Timer _timer;
-  SpriteSheet spriteSheet;
+  late SpriteSheet spriteSheet;
   Random random = Random();
   double elapsedTime = 0.0; // Variable to track elapsed time
 
@@ -16,31 +16,16 @@ class EnemyManager extends Component with HasGameReference<CarboQuest> {
 
   void _spawnEnemy() {
     Vector2 initialSize = Vector2(64, 64);
-    double minX = -150;
+    double minX = -120;
     double maxX = 150;
 
     if (game.buildContext != null) {
       double randomX1 = minX + random.nextDouble() * (maxX - minX);
-
-      // Randomly choose between two enemy types
-      int enemyType = random.nextInt(2) + 1;
-
-      Enemy enemy;
-      Sprite sprite = spriteSheet.getSpriteById(enemyType);
-
-      if (enemyType == 1) {
-        enemy = EnemyType1(
-          sprite: sprite,
-          size: initialSize,
-          position: Vector2(randomX1, -450),
-        );
-      } else {
-        enemy = EnemyType2(
-          sprite: sprite,
-          size: initialSize,
-          position: Vector2(randomX1, -450),
-        );
-      }
+      Enemy enemy = Enemy(
+        sprite: spriteSheet.getSpriteById(11),
+        size: initialSize,
+        position: Vector2(randomX1, -450),
+      );
 
       enemy.anchor = Anchor.center;
       game.world.add(enemy);

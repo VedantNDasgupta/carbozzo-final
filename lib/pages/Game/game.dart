@@ -11,19 +11,19 @@ class CarboQuest extends FlameGame
     with HorizontalDragDetector, HasCollisionDetection {
   late Player player;
   Offset? _pointerStartPosition;
-  Vector2 fixedResolution = Vector2(400, 960);
+  Vector2 fixedResolution = Vector2(400, 1060);
   late TextComponent _playerScore;
   late TextComponent _playerHealth;
 
   @override
   FutureOr<void> onLoad() async {
-    await images.load('robot.png');
+    await images.load('robot1.png');
 
     final spriteSheet = SpriteSheet.fromColumnsAndRows(
-        image: images.fromCache('robot.png'), columns: 9, rows: 5);
+        image: images.fromCache('robot1.png'), columns: 9, rows: 5);
 
     player = Player(
-      sprite: spriteSheet.getSpriteById(9),
+      sprite: spriteSheet.getSpriteById(1),
       size: Vector2(80, 90),
       position: size / 2,
     );
@@ -35,7 +35,6 @@ class CarboQuest extends FlameGame
     EnemyManager enemyManager = EnemyManager(spriteSheet: spriteSheet);
     add(enemyManager);
 
-    //Text component for player score.
     _playerScore = TextComponent(
       text: 'Score: 0',
       position: Vector2(30, 30),
@@ -96,5 +95,13 @@ class CarboQuest extends FlameGame
   void onHorizontalDragCancel() {
     _pointerStartPosition = null;
     player.setMoveDirection(Vector2.zero());
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    _playerScore.text = 'Score: ${player.score}';
+    _playerHealth.text = 'Health: ${player.health}%';
   }
 }
