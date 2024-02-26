@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:carbozzo/components/carbos_manager.dart';
+import 'package:carbozzo/pages/game_pages/board.dart';
 import 'package:carbozzo/pages/main_pages/image_share.dart';
 import 'package:carbozzo/screens/community_groups/cg_1.dart';
 import 'package:carbozzo/screens/community_groups/cg_2.dart';
@@ -329,6 +330,35 @@ class _CommunityPageState extends State<CommunityPage> {
                       ),
                     ),
 
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => GameBoard()));
+                      },
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              offset: Offset(6.0, 6.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     const SizedBox(
                       height: 20,
                     ),

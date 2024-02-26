@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:carbozzo/pages/Game/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +10,6 @@ import 'package:ionicons/ionicons.dart';
 
 class ChallengeScreen extends StatelessWidget {
   ChallengeScreen({Key? key}) : super(key: key);
-  CarboQuest game = CarboQuest();
 
   @override
   Widget build(BuildContext context) {
@@ -79,35 +77,6 @@ class ChallengeScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 15,
                     color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 15),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            GameWidget(game: kDebugMode ? CarboQuest() : game),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(6.0, 6.0),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 SizedBox(height: 15),
