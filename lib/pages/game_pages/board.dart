@@ -15,7 +15,7 @@ List<List<Tetranimo?>> gameBoard = List.generate(
 );
 
 class GameBoard extends StatefulWidget {
-  const GameBoard({Key? key}) : super(key: key);
+  const GameBoard({super.key});
 
   @override
   State<GameBoard> createState() => _GameBoardState();
@@ -25,9 +25,8 @@ class _GameBoardState extends State<GameBoard> {
   Piece currentPiece = Piece(type: Tetranimo.L);
   int currentScore = 0;
   bool gameOver = false;
-  int piecesGenerated = 0;
-  late Timer _gameLoopTimer;
-  int frameRate = 300; // Initial frame rate
+
+  Timer? _gameLoopTimer; // Declare a Timer variable
 
   @override
   void initState() {
@@ -38,48 +37,48 @@ class _GameBoardState extends State<GameBoard> {
   void startGame() {
     currentPiece.initializePiece();
 
-    _gameLoopTimer = Timer.periodic(Duration(milliseconds: frameRate), (timer) {
-      setState(() {
-        clearLines();
-        checkLanding();
-        if (gameOver) {
-          timer.cancel();
-          showGameOverDialog();
-        }
+    if (_gameLoopTimer == null || !_gameLoopTimer!.isActive) {
+      const Duration frameRate = Duration(milliseconds: 100);
+      _gameLoopTimer = Timer.periodic(frameRate, (timer) {
+        setState(() {
+          clearLines();
+          checkLanding();
+          if (gameOver) {
+            timer.cancel();
+            showGameOverDialog();
+          }
 
-        currentPiece.movePiece(Direction.down);
-        checkPopup(); // Check if a popup should be shown after every move
+          currentPiece.movePiece(Direction.down);
+        });
       });
-    });
+    }
   }
 
   @override
   void dispose() {
-    _gameLoopTimer.cancel();
+    _gameLoopTimer?.cancel(); // Cancel the timer in dispose
     super.dispose();
   }
 
   void showGameOverDialog() {
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Game Over'),
-        content: Text('Your score is: $currentScore'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              resetGame();
-              Navigator.pop(context);
-            },
-            child: const Text('Play Again'),
-          )
-        ],
-      ),
-    );
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Game Over'),
+              content: Text('Your score is: $currentScore'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      resetGame();
+                      Navigator.pop(context);
+                    },
+                    child: Text('Play Again'))
+              ],
+            ));
   }
 
   void resetGame() {
-    _gameLoopTimer.cancel();
+    _gameLoopTimer?.cancel(); // Cancel the timer if it's active
     gameBoard = List.generate(
       colLength,
       (i) => List.generate(
@@ -100,6 +99,7 @@ class _GameBoardState extends State<GameBoard> {
       int row = (currentPiece.position[i] / rowLength).floor();
       int col = currentPiece.position[i] % rowLength;
 
+      // Calculate the next position based on the direction
       if (direction == Direction.left) {
         col -= 1;
       } else if (direction == Direction.right) {
@@ -108,10 +108,12 @@ class _GameBoardState extends State<GameBoard> {
         row += 1;
       }
 
+      // Check if the next position is out of bounds
       if (row >= colLength || col < 0 || col >= rowLength) {
         return true;
       }
 
+      // Check if the next position is already occupied on the game board
       if (row >= 0 && gameBoard[row][col] != null) {
         return true;
       }
@@ -141,14 +143,10 @@ class _GameBoardState extends State<GameBoard> {
     currentPiece = Piece(type: randomType);
     currentPiece.initializePiece();
 
-    piecesGenerated++; // Increment the count of generated pieces
-
     if (isGameOver()) {
       gameOver = true;
       startGame();
     }
-
-    checkPopup(); // Check if a popup should be shown after generating a new piece
   }
 
   void moveLeft() {
@@ -202,56 +200,6 @@ class _GameBoardState extends State<GameBoard> {
     return false;
   }
 
-  void checkPopup() {
-    if (piecesGenerated > 0 && piecesGenerated % 5 == 0) {
-      showPopup();
-    }
-  }
-
-  void showPopup() {
-    _gameLoopTimer.cancel(); // Pause the game loop timer
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // Prevent dismissing the dialog by tapping outside
-      builder: (context) => AlertDialog(
-        title: Text('Your question here'),
-        content: Text('Your content here'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              handlePopupResponse(true);
-              Navigator.pop(context);
-            },
-            child: Text('Correct'),
-          ),
-          TextButton(
-            onPressed: () {
-              handlePopupResponse(false);
-              Navigator.pop(context);
-            },
-            child: Text('Incorrect'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void handlePopupResponse(bool isCorrect) {
-    // Handle the user's response
-    if (isCorrect) {
-      frameRate += 50; // Increase frame rate for correct answer
-    } else {
-      frameRate -= 50; // Decrease frame rate for incorrect answer
-    }
-
-    // Ensure the frame rate stays within reasonable bounds
-    frameRate = frameRate.clamp(50, 1000);
-
-    // Dismiss the popup
-    Navigator.pop(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -261,23 +209,23 @@ class _GameBoardState extends State<GameBoard> {
           Expanded(
             child: GridView.builder(
               itemCount: rowLength * colLength,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: rowLength,
-              ),
+                  crossAxisCount: rowLength),
               itemBuilder: (context, index) {
                 int row = (index / rowLength).floor();
                 int col = index % rowLength;
 
                 if (currentPiece.position.contains(index)) {
                   return Pixel(
-                    color: currentPiece.color,
+                    color: currentPiece.color, // Color of the current piece
                   );
                 } else {
                   final Tetranimo? tetranimoType = gameBoard[row][col];
                   if (tetranimoType != null) {
                     return Pixel(
-                      color: tetranimoColors[tetranimoType],
+                      color: tetranimoColors[
+                          tetranimoType], // Color based on the piece type
                     );
                   } else {
                     return Pixel(
@@ -298,20 +246,17 @@ class _GameBoardState extends State<GameBoard> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
-                  onPressed: moveLeft,
-                  color: Colors.white,
-                  icon: Icon(Icons.arrow_back_ios),
-                ),
+                    onPressed: moveLeft,
+                    color: Colors.white,
+                    icon: Icon(Icons.arrow_back_ios)),
                 IconButton(
-                  onPressed: rotatePiece,
-                  color: Colors.white,
-                  icon: Icon(Icons.rotate_right),
-                ),
+                    onPressed: rotatePiece,
+                    color: Colors.white,
+                    icon: Icon(Icons.rotate_right)),
                 IconButton(
-                  onPressed: moveRight,
-                  color: Colors.white,
-                  icon: Icon(Icons.arrow_forward_ios),
-                ),
+                    onPressed: moveRight,
+                    color: Colors.white,
+                    icon: Icon(Icons.arrow_forward_ios)),
               ],
             ),
           )
