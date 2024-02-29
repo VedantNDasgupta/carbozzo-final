@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:carbozzo/components/carbos_manager.dart';
 import 'package:carbozzo/pages/game_pages/board.dart';
+import 'package:carbozzo/pages/game_pages/menu.dart';
 import 'package:carbozzo/pages/main_pages/image_share.dart';
 import 'package:carbozzo/screens/community_groups/cg_1.dart';
 import 'package:carbozzo/screens/community_groups/cg_2.dart';
@@ -333,16 +334,26 @@ class _CommunityPageState extends State<CommunityPage> {
                     const SizedBox(
                       height: 20,
                     ),
+                    Text(
+                      'Tetra Sustaina (Mini-Game)',
+                      style: GoogleFonts.raleway(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
 
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => GameBoard()));
+                                builder: (context) => MenuPage()));
                       },
                       child: Container(
-                        height: 100,
+                        height: 300,
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(5),
@@ -356,6 +367,10 @@ class _CommunityPageState extends State<CommunityPage> {
                               offset: Offset(6.0, 6.0),
                             ),
                           ],
+                          image: DecorationImage(
+                            image: AssetImage('lib/images/minigame.png'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),

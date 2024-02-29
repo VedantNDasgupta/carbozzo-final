@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:carbozzo/pages/game_pages/piece.dart';
@@ -139,9 +140,8 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void resetGame() {
-    _gameLoopTimer?.cancel(); // Cancel the timer if it's active
-    _buttonVisibilityTimer
-        ?.cancel(); // Cancel the button visibility timer if it's active
+    _gameLoopTimer?.cancel();
+    _buttonVisibilityTimer?.cancel();
     gameBoard = List.generate(
       colLength,
       (i) => List.generate(
@@ -151,8 +151,8 @@ class _GameBoardState extends State<GameBoard> {
     );
 
     gameOver = false;
-    currentScore = 0;
 
+    currentScore = 0;
     createNewPiece();
     startGame();
   }
