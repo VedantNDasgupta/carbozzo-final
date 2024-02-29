@@ -332,7 +332,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     ),
 
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Text(
                       'Tetra Sustaina (Mini-Game)',
@@ -353,7 +353,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                 builder: (context) => MenuPage()));
                       },
                       child: Container(
-                        height: 300,
+                        height: 350,
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(5),
