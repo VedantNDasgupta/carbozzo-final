@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool isSoundOn = true; // Track whether sound is on or off
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +46,18 @@ class SettingsPage extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  // Implement sound toggle functionality
+                  // Toggle sound on/off
+                  setState(() {
+                    isSoundOn = !isSoundOn;
+                  });
                 },
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
                   decoration: BoxDecoration(
-                    color: Colors.yellow,
+                    color: isSoundOn
+                        ? Colors.yellow
+                        : Colors.red, // Change color based on sound state
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
@@ -56,7 +68,9 @@ class SettingsPage extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    'Sound: On',
+                    isSoundOn
+                        ? 'Sound: On'
+                        : 'Sound: Off', // Change text based on sound state
                     style: GoogleFonts.pressStart2p(
                       textStyle: TextStyle(
                         fontSize: 18,

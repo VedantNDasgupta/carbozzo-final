@@ -1,11 +1,45 @@
-import 'package:carbozzo/pages/game_pages/settings.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:carbozzo/pages/game_pages/settings.dart';
 import 'package:carbozzo/pages/game_pages/board.dart';
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
+
+  @override
+  _MenuPageState createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  late AudioPlayer audioPlayer;
+  bool isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    audioPlayer = AudioPlayer();
+    playBackgroundMusic();
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void playBackgroundMusic() async {
+    await audioPlayer.setSource(AssetSource('audio/neon.mp3'));
+    await audioPlayer.setVolume(9);
+    await audioPlayer.resume();
+  }
+
+  void stopBackgroundMusic() async {
+    await audioPlayer.stop();
+    setState(() {
+      isPlaying = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +76,7 @@ class MenuPage extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
+                  stopBackgroundMusic();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GameBoard()),
@@ -137,7 +172,7 @@ class MenuPage extends StatelessWidget {
               ),
               SizedBox(height: 30),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
                 },
                 child: AnimatedContainer(
@@ -164,7 +199,7 @@ class MenuPage extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

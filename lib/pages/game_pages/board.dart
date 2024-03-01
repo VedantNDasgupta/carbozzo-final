@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:carbozzo/pages/game_pages/piece.dart';
 import 'package:carbozzo/pages/game_pages/pixel.dart';
 import 'package:carbozzo/pages/game_pages/quiz_data.dart';
@@ -32,22 +33,51 @@ class _GameBoardState extends State<GameBoard> {
   bool showButtons = false;
   int currentQuestionIndex = 0;
 
-  Timer? _gameLoopTimer; // Declare a Timer variable
-  Timer?
-      _buttonVisibilityTimer; // Declare a Timer variable for controlling button visibility
+  Timer? _gameLoopTimer;
+  Timer? _buttonVisibilityTimer;
+  late AudioPlayer audioPlayer;
+  bool isPlaying = false;
 
   @override
   void initState() {
     super.initState();
     startGame();
+
+    audioPlayer = AudioPlayer();
+    playBackgroundMusic();
+  }
+
+  @override
+  void dispose() {
+    _gameLoopTimer?.cancel(); // Cancel the timer in dispose
+    _buttonVisibilityTimer
+        ?.cancel(); // Cancel the button visibility timer in dispose
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void playBackgroundMusic() async {
+    await audioPlayer.setSource(AssetSource('audio/neon.mp3'));
+    await audioPlayer.setVolume(9);
+    await audioPlayer.resume();
+  }
+
+  void stopBackgroundMusic() async {
+    await audioPlayer.stop();
+    setState(() {
+      isPlaying = false;
+    });
   }
 
   void startGame() {
     currentPiece.initializePiece();
 
     if (_gameLoopTimer == null || !_gameLoopTimer!.isActive) {
-      const Duration frameRate = Duration(milliseconds: 500);
-      _gameLoopTimer = Timer.periodic(frameRate, (timer) {
+      const Duration initialFrameRate = Duration(milliseconds: 500);
+      const double frameRateDecrement = 0.1;
+      const Duration minFrameRate = Duration(milliseconds: 100);
+
+      _gameLoopTimer = Timer.periodic(initialFrameRate, (timer) {
         setState(() {
           clearLines();
           checkLanding();
@@ -58,24 +88,47 @@ class _GameBoardState extends State<GameBoard> {
 
           currentPiece.movePiece(Direction.down);
 
-          // Increment collision count and check if it's a multiple of 5
           pieceCollisionCount++;
           if (pieceCollisionCount % 25 == 0) {
             showButtons = true;
           } else if (pieceCollisionCount % 45 == 0) {
             showButtons = false;
           }
+
+          if (timer.tick % 100 == 0) {
+            Duration newFrameRate = Duration(
+              milliseconds:
+                  (initialFrameRate.inMilliseconds * (1 - frameRateDecrement))
+                      .toInt(),
+            );
+            _gameLoopTimer!.cancel();
+            if (newFrameRate < minFrameRate) {
+              newFrameRate = minFrameRate;
+            }
+            _gameLoopTimer = Timer.periodic(newFrameRate, (timer) {
+              setState(() {
+                clearLines();
+                checkLanding();
+                if (gameOver) {
+                  timer.cancel();
+                  showGameOverDialog();
+                }
+
+                currentPiece.movePiece(Direction.down);
+
+                // Increment collision count and check if it's a multiple of 5
+                pieceCollisionCount++;
+                if (pieceCollisionCount % 25 == 0) {
+                  showButtons = true;
+                } else if (pieceCollisionCount % 45 == 0) {
+                  showButtons = false;
+                }
+              });
+            });
+          }
         });
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _gameLoopTimer?.cancel(); // Cancel the timer in dispose
-    _buttonVisibilityTimer
-        ?.cancel(); // Cancel the button visibility timer in dispose
-    super.dispose();
   }
 
   void showGameOverDialog() {
@@ -324,7 +377,17 @@ class _GameBoardState extends State<GameBoard> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          currentScore += 5;
+                          if (quizData[currentQuestionIndex]
+                                  .correctOptionIndex ==
+                              0) {
+                            currentScore +=
+                                5; // Increase score if correct option selected
+                          } else {
+                            currentScore = max(
+                                0,
+                                currentScore -
+                                    5); // Decrease score if incorrect option selected
+                          }
                           showButtons = false; // Hide buttons when pressed
                           currentQuestionIndex =
                               (currentQuestionIndex + 1) % quizData.length;
@@ -363,7 +426,17 @@ class _GameBoardState extends State<GameBoard> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          currentScore = max(0, currentScore - 5);
+                          if (quizData[currentQuestionIndex]
+                                  .correctOptionIndex ==
+                              1) {
+                            currentScore +=
+                                5; // Increase score if correct option selected
+                          } else {
+                            currentScore = max(
+                                0,
+                                currentScore -
+                                    5); // Decrease score if incorrect option selected
+                          }
                           showButtons = false; // Hide buttons when pressed
                           currentQuestionIndex =
                               (currentQuestionIndex + 1) % quizData.length;
@@ -392,7 +465,7 @@ class _GameBoardState extends State<GameBoard> {
                             style: GoogleFonts.pressStart2p(
                               textStyle: TextStyle(
                                 color: Colors.black,
-                                fontSize: 12, // Change the font size as needed
+                                fontSize: 12,
                               ),
                             ),
                           ),

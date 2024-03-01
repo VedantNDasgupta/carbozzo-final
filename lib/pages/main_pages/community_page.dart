@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:carbozzo/components/carbos_manager.dart';
 import 'package:carbozzo/pages/game_pages/board.dart';
 import 'package:carbozzo/pages/game_pages/menu.dart';
@@ -42,11 +43,14 @@ class _CommunityPageState extends State<CommunityPage> {
     super.initState();
     _carbosManager = CarbosManager(); // Initialize CarbosManager
     _fetchCarbos(); // Fetch carbos data
+    final audioPlayer = AudioPlayer(playerId: 'game_sound');
+    audioPlayer.dispose();
   }
 
   Future<void> _fetchCarbos() async {
     await _carbosManager.fetchUserId(); // Fetch user ID
-    await _carbosManager.fetchCarbos(); // Fetch carbos data
+    await _carbosManager.fetchCarbos();
+
     setState(() {}); // Update UI
   }
 
@@ -346,11 +350,12 @@ class _CommunityPageState extends State<CommunityPage> {
                     ),
 
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        // Navigate to MenuPage
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MenuPage()));
+                          context,
+                          MaterialPageRoute(builder: (context) => MenuPage()),
+                        );
                       },
                       child: Container(
                         height: 350,
@@ -374,6 +379,7 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                       ),
                     ),
+
                     const SizedBox(
                       height: 20,
                     ),
