@@ -30,7 +30,8 @@ class FirebaseAuthService {
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'name': '', // Add name if available
       'email': email,
-      'carbopoints': 0, // Default initial value for carbopoints
+      'carbopoints': 0,
+      'score': 0, // Default initial value for carbopoints
     });
   }
 

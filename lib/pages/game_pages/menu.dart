@@ -1,7 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:carbozzo/pages/game_pages/how.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:carbozzo/pages/game_pages/settings.dart';
+import 'package:carbozzo/pages/game_pages/score.dart';
 import 'package:carbozzo/pages/game_pages/board.dart';
 
 class MenuPage extends StatefulWidget {
@@ -77,6 +80,7 @@ class _MenuPageState extends State<MenuPage> {
               GestureDetector(
                 onTap: () {
                   stopBackgroundMusic();
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GameBoard()),
@@ -110,7 +114,10 @@ class _MenuPageState extends State<MenuPage> {
               SizedBox(height: 30),
               GestureDetector(
                 onTap: () {
-                  // Navigate to game guide screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HowScreen()),
+                  );
                 },
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 300),
@@ -142,7 +149,7 @@ class _MenuPageState extends State<MenuPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
+                    MaterialPageRoute(builder: (context) => ScorePage()),
                   );
                 },
                 child: AnimatedContainer(
@@ -160,7 +167,7 @@ class _MenuPageState extends State<MenuPage> {
                     ],
                   ),
                   child: Text(
-                    'Settings',
+                    'Scores',
                     style: GoogleFonts.pressStart2p(
                       textStyle: TextStyle(
                         fontSize: 18,

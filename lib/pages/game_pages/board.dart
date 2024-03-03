@@ -7,8 +7,12 @@ import 'package:carbozzo/pages/game_pages/piece.dart';
 import 'package:carbozzo/pages/game_pages/pixel.dart';
 import 'package:carbozzo/pages/game_pages/quiz_data.dart';
 import 'package:carbozzo/pages/game_pages/values.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shake/shake.dart';
 
 List<List<Tetranimo?>> gameBoard = List.generate(
   colLength,
@@ -32,6 +36,7 @@ class _GameBoardState extends State<GameBoard> {
   bool gameOver = false;
   bool showButtons = false;
   int currentQuestionIndex = 0;
+  bool showRedOverlay = false;
 
   Timer? _gameLoopTimer;
   Timer? _buttonVisibilityTimer;
@@ -60,6 +65,25 @@ class _GameBoardState extends State<GameBoard> {
     await audioPlayer.setSource(AssetSource('audio/neon.mp3'));
     await audioPlayer.setVolume(9);
     await audioPlayer.resume();
+  }
+
+  void shakeScreen() {
+    // Perform the screen shake effect here
+    HapticFeedback.vibrate();
+  }
+
+  // Method to display a red overlay across the entire screen for a split second
+  void flashRedOverlay() {
+    setState(() {
+      showRedOverlay = true; // Set flag to true to show red overlay
+    });
+
+    // Revert back to original state after a split second
+    Timer(Duration(milliseconds: 500), () {
+      setState(() {
+        showRedOverlay = false; // Set flag to false to hide red overlay
+      });
+    });
   }
 
   void stopBackgroundMusic() async {
@@ -132,6 +156,7 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void showGameOverDialog() {
+    writeToFirestore();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -261,6 +286,7 @@ class _GameBoardState extends State<GameBoard> {
 
     if (isGameOver()) {
       gameOver = true;
+      writeToFirestore();
       startGame();
     }
   }
@@ -316,88 +342,245 @@ class _GameBoardState extends State<GameBoard> {
     return false;
   }
 
+  //now we update the score in firebase
+
+  void writeToFirestore() async {
+    try {
+      final user = FirebaseAuth.instance
+          .currentUser; // Assuming you're using Firebase Authentication
+
+      if (user != null) {
+        final userDoc =
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+        // Check if the document exists
+        final docSnapshot = await userDoc.get();
+        if (docSnapshot.exists) {
+          final currentScoreInFirestore = docSnapshot.get('score') ?? 0;
+
+          // Ensure currentScore is of type int
+          if (currentScore is int) {
+            // Update the 'Score' field only if currentScore is higher
+            if (currentScore > currentScoreInFirestore) {
+              await userDoc.update({
+                'score': currentScore,
+              });
+              print('Score updated successfully!');
+            } else {
+              print(
+                  'Current score is not higher than the existing score in Firestore.');
+            }
+          } else {
+            print('Current score is not of type int.');
+          }
+        } else {
+          // Document doesn't exist, create it with the 'Score' field
+          await userDoc.set({
+            'score': currentScore,
+          });
+          print('New document created with Score field!');
+        }
+      } else {
+        print('User is not logged in.');
+      }
+    } catch (e) {
+      print('Error writing score to Firestore: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: GridView.builder(
-                itemCount: rowLength * colLength,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: rowLength,
-                ),
-                itemBuilder: (context, index) {
-                  int row = (index / rowLength).floor();
-                  int col = index % rowLength;
-
-                  if (currentPiece.position.contains(index)) {
-                    return Pixel(
-                      color: currentPiece.color, // Color of the current piece
-                    );
-                  } else {
-                    final Tetranimo? tetranimoType = gameBoard[row][col];
-                    if (tetranimoType != null) {
-                      return Pixel(
-                        color: tetranimoColors[
-                            tetranimoType], // Color based on the piece type
-                      );
-                    } else {
-                      return Pixel(
-                        color: Colors.white12,
-                      );
-                    }
-                  }
-                }),
+          Positioned.fill(
+            child: AnimatedOpacity(
+              opacity: showRedOverlay ? 1.0 : 0.0, // Show/hide the red overlay
+              duration: Duration(milliseconds: 300), // Animation duration
+              child: Container(
+                color: Colors.red.withOpacity(1), // Red background color
+              ),
+            ),
           ),
-          Visibility(
-            visible: showButtons,
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    quizData[currentQuestionIndex].question,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.pressStart2p(
-                      textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
+          Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                    itemCount: rowLength * colLength,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: rowLength,
+                    ),
+                    itemBuilder: (context, index) {
+                      int row = (index / rowLength).floor();
+                      int col = index % rowLength;
+
+                      if (currentPiece.position.contains(index)) {
+                        return Pixel(
+                          color:
+                              currentPiece.color, // Color of the current piece
+                        );
+                      } else {
+                        final Tetranimo? tetranimoType = gameBoard[row][col];
+                        if (tetranimoType != null) {
+                          return Pixel(
+                            color: tetranimoColors[
+                                tetranimoType], // Color based on the piece type
+                          );
+                        } else {
+                          return Pixel(
+                            color: Colors.white12,
+                          );
+                        }
+                      }
+                    }),
+              ),
+              Visibility(
+                visible: showButtons,
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        quizData[currentQuestionIndex].question,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.pressStart2p(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (quizData[currentQuestionIndex]
+                                      .correctOptionIndex ==
+                                  0) {
+                                currentScore +=
+                                    5; // Increase score if correct option selected
+                              } else {
+                                currentScore = max(0, currentScore - 5);
+                                shakeScreen(); // Decrease score if incorrect option selected
+                                flashRedOverlay();
+                              }
+                              showButtons = false; // Hide buttons when pressed
+                              currentQuestionIndex =
+                                  (currentQuestionIndex + 1) % quizData.length;
+                            });
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 180,
+                            decoration: BoxDecoration(
+                              color: Colors.deepPurpleAccent,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 2,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  offset: Offset(6.0, 6.0),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                quizData[currentQuestionIndex].options[0],
+                                style: GoogleFonts.pressStart2p(
+                                  textStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12, // Adjust font size as needed
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (quizData[currentQuestionIndex]
+                                      .correctOptionIndex ==
+                                  1) {
+                                currentScore +=
+                                    5; // Increase score if correct option selected
+                              } else {
+                                currentScore = max(0, currentScore - 5);
+                                shakeScreen(); // Decrease score if incorrect option selected
+                                flashRedOverlay();
+                              }
+                              showButtons = false; // Hide buttons when pressed
+                              currentQuestionIndex =
+                                  (currentQuestionIndex + 1) % quizData.length;
+                            });
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 180,
+                            decoration: BoxDecoration(
+                              color: Colors.deepPurpleAccent,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 2,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  offset: Offset(6.0, 6.0),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                quizData[currentQuestionIndex].options[1],
+                                style: GoogleFonts.pressStart2p(
+                                  textStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              Text(
+                'Score: $currentScore',
+                style: GoogleFonts.pressStart2p(
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18, // Change the font size as needed
                   ),
                 ),
-                SizedBox(height: 10),
-                Row(
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30, top: 10),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (quizData[currentQuestionIndex]
-                                  .correctOptionIndex ==
-                              0) {
-                            currentScore +=
-                                5; // Increase score if correct option selected
-                          } else {
-                            currentScore = max(
-                                0,
-                                currentScore -
-                                    5); // Decrease score if incorrect option selected
-                          }
-                          showButtons = false; // Hide buttons when pressed
-                          currentQuestionIndex =
-                              (currentQuestionIndex + 1) % quizData.length;
-                        });
-                      },
+                      onTap: moveLeft,
                       child: Container(
                         height: 50,
-                        width: 180,
+                        width: 90,
                         decoration: BoxDecoration(
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.amber,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: Colors.black,
@@ -410,43 +593,20 @@ class _GameBoardState extends State<GameBoard> {
                             ),
                           ],
                         ),
-                        child: Center(
-                          child: Text(
-                            quizData[currentQuestionIndex].options[0],
-                            style: GoogleFonts.pressStart2p(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12, // Adjust font size as needed
-                              ),
-                            ),
-                          ),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          size: 30,
+                          color: Colors.black,
                         ),
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (quizData[currentQuestionIndex]
-                                  .correctOptionIndex ==
-                              1) {
-                            currentScore +=
-                                5; // Increase score if correct option selected
-                          } else {
-                            currentScore = max(
-                                0,
-                                currentScore -
-                                    5); // Decrease score if incorrect option selected
-                          }
-                          showButtons = false; // Hide buttons when pressed
-                          currentQuestionIndex =
-                              (currentQuestionIndex + 1) % quizData.length;
-                        });
-                      },
+                      onTap: rotatePiece,
                       child: Container(
                         height: 50,
-                        width: 180,
+                        width: 90,
                         decoration: BoxDecoration(
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.amber,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: Colors.black,
@@ -459,119 +619,43 @@ class _GameBoardState extends State<GameBoard> {
                             ),
                           ],
                         ),
-                        child: Center(
-                          child: Text(
-                            quizData[currentQuestionIndex].options[1],
-                            style: GoogleFonts.pressStart2p(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                              ),
-                            ),
+                        child: Icon(
+                          Icons.rotate_right,
+                          size: 30,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: moveRight,
+                      child: Container(
+                        height: 50,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              offset: Offset(6.0, 6.0),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 30,
+                          color: Colors.black,
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
-              ],
-            ),
-          ),
-          Text(
-            'Score: $currentScore',
-            style: GoogleFonts.pressStart2p(
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 18, // Change the font size as needed
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 30, top: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GestureDetector(
-                  onTap: moveLeft,
-                  child: Container(
-                    height: 50,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(6.0, 6.0),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: rotatePiece,
-                  child: Container(
-                    height: 50,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(6.0, 6.0),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.rotate_right,
-                      size: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: moveRight,
-                  child: Container(
-                    height: 50,
-                    width: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: Offset(6.0, 6.0),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            ],
           ),
         ],
       ),
