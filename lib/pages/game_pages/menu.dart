@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carbozzo/pages/game_pages/score.dart';
 import 'package:carbozzo/pages/game_pages/board.dart';
+import 'package:lottie/lottie.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -14,20 +15,38 @@ class MenuPage extends StatefulWidget {
   _MenuPageState createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _MenuPageState extends State<MenuPage>
+    with SingleTickerProviderStateMixin {
   late AudioPlayer audioPlayer;
   bool isPlaying = false;
+
+  late AnimationController _controller;
+  late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
     super.initState();
     audioPlayer = AudioPlayer();
     playBackgroundMusic();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+    _colorAnimation = ColorTween(
+      begin: Colors.white,
+      end: Colors.green,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
   void dispose() {
     audioPlayer.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -35,6 +54,10 @@ class _MenuPageState extends State<MenuPage> {
     await audioPlayer.setSource(AssetSource('audio/neon.mp3'));
     await audioPlayer.setVolume(9);
     await audioPlayer.resume();
+  }
+
+  void loop() {
+    audioPlayer.setReleaseMode(ReleaseMode.loop);
   }
 
   void stopBackgroundMusic() async {
@@ -60,22 +83,36 @@ class _MenuPageState extends State<MenuPage> {
         ),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'Tetra\nSustaina',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.pressStart2p(
-                  textStyle: TextStyle(
-                    fontSize: 45,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              Lottie.network(
+                'https://lottie.host/42d4e006-ab9b-4223-911e-d4c94f679dc4/zCf0EoH9y9.json',
+                width: 300,
+                height: 250,
+                fit: BoxFit.fitHeight,
+                repeat: true,
+                frameRate: FrameRate(10),
+              ),
+              SizedBox(height: 30),
+              AnimatedBuilder(
+                animation: _colorAnimation,
+                builder: (context, child) {
+                  return Text(
+                    'Tetra\nSustaina',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.pressStart2p(
+                      textStyle: TextStyle(
+                        fontSize: 45,
+                        color: _colorAnimation.value,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                },
               ),
               SizedBox(
-                height: 60,
+                height: 30,
               ),
               GestureDetector(
                 onTap: () {

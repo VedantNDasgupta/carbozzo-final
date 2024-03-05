@@ -47,6 +47,7 @@ class _GameBoardState extends State<GameBoard> {
   void initState() {
     super.initState();
     startGame();
+    shuffleQuestions();
 
     audioPlayer = AudioPlayer();
     playBackgroundMusic();
@@ -62,9 +63,14 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void playBackgroundMusic() async {
-    await audioPlayer.setSource(AssetSource('audio/neon.mp3'));
-    await audioPlayer.setVolume(9);
+    await audioPlayer.setSource(AssetSource('audio/drift.mp3'));
+    await audioPlayer.setVolume(10);
+
     await audioPlayer.resume();
+  }
+
+  void loop() {
+    audioPlayer.setReleaseMode(ReleaseMode.loop);
   }
 
   void shakeScreen() {
@@ -215,6 +221,10 @@ class _GameBoardState extends State<GameBoard> {
         ),
       ),
     );
+  }
+
+  void shuffleQuestions() {
+    quizData.shuffle();
   }
 
   void resetGame() {
@@ -555,6 +565,30 @@ class _GameBoardState extends State<GameBoard> {
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+                replacement: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Text(
+                      "Questions incoming",
+                      style: GoogleFonts.pressStart2p(
+                        textStyle: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      ".....",
+                      style: GoogleFonts.pressStart2p(
+                        textStyle: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 45,
+                        ),
+                      ),
                     ),
                     SizedBox(height: 10),
                   ],

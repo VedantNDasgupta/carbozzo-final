@@ -2,8 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 
-class HowScreen extends StatelessWidget {
+class HowScreen extends StatefulWidget {
   const HowScreen({Key? key}) : super(key: key);
+
+  @override
+  _HowScreenState createState() => _HowScreenState();
+}
+
+class _HowScreenState extends State<HowScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Color?> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
+    _colorAnimation =
+        ColorTween(begin: Colors.red, end: Colors.green).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,22 +46,30 @@ class HowScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Image.asset(
-                  'lib/images/guidebanner.png',
+                  'lib/images/minigame.png',
                   width: 1000,
-                  height: 200,
-                  fit: BoxFit.cover,
+                  height: 350,
+                  fit: BoxFit.fill,
                 ),
               ),
               const SizedBox(height: 30),
               Center(
-                child: Text('Tetra Sustaina',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.pressStart2p(
-                      textStyle: TextStyle(
+                child: AnimatedBuilder(
+                  animation: _colorAnimation,
+                  builder: (context, child) {
+                    return Text(
+                      'Tetra Sustaina',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.pressStart2p(
+                        textStyle: TextStyle(
                           fontSize: 23,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900),
-                    )),
+                          color: _colorAnimation.value,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               SizedBox(
                 height: 30,
@@ -63,7 +97,7 @@ class HowScreen extends StatelessWidget {
                       )),
                 ],
               ),
-              //seperation effect
+              //separation effect
               SizedBox(
                 height: 20,
               ),
@@ -74,7 +108,7 @@ class HowScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Tasks & Sharing',
+                'Classic Tetris',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 21,
                   color: Colors.amber,
@@ -83,22 +117,14 @@ class HowScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'You can use the Home Screen to browse through the categories of green tasks. Once you complete a green task in real life, simply tap the category of that task and click an image proof of the same. Submit the image to your partner for cross-verification.',
+                'Remember the time when you enjoyed the classic fan-favorite game of Tetris at your local arcade, while being surrounded by excited friends? \nTake a trip down memory lane, as you dive deep into setting the blocks right, but with an eco-friendly twist this time. Are you quick enough to make the blocks vanish in thin air?',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
               SizedBox(height: 15),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Image.asset(
-                  'lib/images/homeshare.png',
-                  width: 500,
-                  height: 300, // Adjust the height as needed
-                  fit: BoxFit.cover,
-                ),
-              ),
+
               SizedBox(
                 height: 20,
               ),
@@ -109,7 +135,7 @@ class HowScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Inspiration and Rewards',
+                'Sustainable Wisdom',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 21,
                   color: Colors.amber,
@@ -118,22 +144,14 @@ class HowScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Check the Inspiration Page to know more about your task categories. Keep a record of your progress in the Carbo Roadmap to unlock new and exciting rewards. Browse through the various insightful stats to discover the goodness you are adding to the environment through Carbozzo.',
+                'As you play your sweet game of Tetris, you will be bombarded with hot questions that will challenge your knowledge about sustainability and the environment. Each correct answer rewards you with 5 extra points, while wrong ones punish you. Can you flex your green wisdom?',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
               const SizedBox(height: 15),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Image.asset(
-                  'lib/images/carbomapinspi.png',
-                  width: 500,
-                  height: 300,
-                  fit: BoxFit.cover,
-                ),
-              ),
+
               SizedBox(
                 height: 20,
               ),
@@ -144,7 +162,7 @@ class HowScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Community and Profile',
+                'Beat the High Scores!',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 21,
                   color: Colors.amber,
@@ -153,22 +171,13 @@ class HowScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Check the Community tab to discover Environmental NGOs and local organisations around you. Read their brochures and join the ones whose initiatives allign with your actions. Tinker with your username and avatar in the Profile Page and optimise the settings as per your needs.',
+                'Set new high scores and try to beat them, as your enjoy your classic retro arcade version of Tetris, combined with side-questions that test your knowledge about sustainability. Are you the best player in town?',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
               const SizedBox(height: 15),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Image.asset(
-                  'lib/images/communityprofile.png',
-                  width: 500,
-                  height: 300,
-                  fit: BoxFit.cover,
-                ),
-              ),
 
               const SizedBox(height: 30),
             ],

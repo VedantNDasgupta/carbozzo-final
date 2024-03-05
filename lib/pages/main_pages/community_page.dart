@@ -369,7 +369,7 @@ class _CommunityPageState extends State<CommunityPage> {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black,
-                              offset: Offset(6.0, 6.0),
+                              offset: Offset(8.0, 10.0),
                             ),
                           ],
                           image: DecorationImage(
