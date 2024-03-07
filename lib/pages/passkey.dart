@@ -6,7 +6,7 @@ class PasskeyPage extends StatelessWidget {
   final TextEditingController _passkeyController = TextEditingController();
 
   void checkPasskeyAndNavigate(BuildContext context) {
-    if (_passkeyController.text.trim().toUpperCase() == "IITBOMBAY") {
+    if (_passkeyController.text.trim().toUpperCase() == "FLUTTER") {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -93,6 +93,17 @@ class PasskeyPage extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
                 // user input color
                 onSubmitted: (_) => checkPasskeyAndNavigate(context),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                'Hint: FLUTTER',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.amber,
+                ),
               ),
             ],
           ),

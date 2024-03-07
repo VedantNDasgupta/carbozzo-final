@@ -92,7 +92,36 @@ class GuideScreen extends StatelessWidget {
                 height: 0.3,
                 decoration: BoxDecoration(color: Colors.white),
               ),
-              const SizedBox(height: 20),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'How to use for the First Time',
+                style: GoogleFonts.poppins(
+                  fontSize: 22,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                  '1. Press the Avatar on the Home Screen and go to \'QR Code\'\n 2. Scan the QR Code of your partner to pair up \n 3. Complete an Eco-Task in real life \n 4. Select the task category and upload proof of your task completion \n 5. Go to \'Verify\' on the Home Page and cross-verify your partner\'s proof \n 6. Gain Carbopoints for every ACCEPTED proof and unlock rewards!',
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Colors.grey,
+                  )),
+
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: double.infinity,
+                height: 0.3,
+                decoration: BoxDecoration(color: Colors.white),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Text(
                 'Tasks & Sharing',
                 style: GoogleFonts.poppins(

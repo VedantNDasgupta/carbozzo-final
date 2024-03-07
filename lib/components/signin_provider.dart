@@ -133,8 +133,8 @@ class SignInProvider extends ChangeNotifier {
       "uid": _uid,
       "image_url": _imageUrl,
       "provider": _provider,
-      "carbopoints": '0',
-      "score": '0',
+      "carbopoints": 0,
+      "score": 0,
     });
     notifyListeners();
   }
@@ -157,7 +157,7 @@ class SignInProvider extends ChangeNotifier {
     _uid = s.getString('uid');
     _provider = s.getString('provider');
     _carbopoints = s.getInt('carbopoints') ?? 0;
-    _score = s.getInt('score') ?? 0; // Fetch 'carbopoints' as an integer
+    _score = s.getInt('score') ?? 0;
     notifyListeners();
   }
 
