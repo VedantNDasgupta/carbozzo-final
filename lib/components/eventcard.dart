@@ -20,7 +20,7 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 275, // Increased height to accommodate the image
+      height: 275,
       margin: EdgeInsets.all(25),
       padding: EdgeInsets.all(25),
       decoration: BoxDecoration(
@@ -82,10 +82,9 @@ class EventCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15),
-          // Added Image widget
           Image.asset(
             imagePath,
-            height: 90, // Adjust the height as needed
+            height: 90,
             width: double.infinity,
             fit: BoxFit.cover,
           ),

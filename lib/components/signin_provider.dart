@@ -12,7 +12,6 @@ class SignInProvider extends ChangeNotifier {
   bool _isSignedIn = false;
   bool get isSignedIn => _isSignedIn;
 
-  //hasError, errorCode, provider,uid, email, name, imageUrl
   bool _hasError = false;
   bool get hasError => _hasError;
 

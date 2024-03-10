@@ -341,7 +341,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // List of habits
+          // List of tasks
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -402,7 +402,7 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: Colors.black,
-                width: 3, // Increase the border width
+                width: 3,
               ),
             ),
             child: Column(
@@ -508,7 +508,7 @@ class _HomePageState extends State<HomePage> {
       pageBuilder: (context, animation, secondaryAnimation) => SharePage(
         db: db,
       ),
-      transitionDuration: Duration(milliseconds: 800), // Adjust the duration
+      transitionDuration: Duration(milliseconds: 800),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset(0.0, 0.0);

@@ -14,10 +14,8 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  //page track controller
   final PageController _controller = PageController();
 
-  //last intro page tracker
   bool onLastPage = false;
 
   @override
@@ -25,7 +23,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          //page view
           PageView(
             controller: _controller,
             onPageChanged: (index) {
@@ -40,8 +37,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               IntroPage4(),
             ],
           ),
-
-          //dot indicators main
           Container(
             alignment: const Alignment(0, 0.9),
             child: Row(
@@ -82,9 +77,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   controller: _controller,
                   count: 4,
                   effect: WormEffect(
-                    // You can use other effects as well
-                    activeDotColor: Colors.amber, // Set the active dot color
-                    dotColor: Colors.white, // Set the inactive dot color
+                    activeDotColor: Colors.amber,
+                    dotColor: Colors.white,
                     dotHeight: 20,
                     dotWidth: 20,
                   ),

@@ -12,7 +12,6 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  // ignore: non_constant_identifier_names
   List Screens = [
     const IdeasPage(),
     HomePage(),

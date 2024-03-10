@@ -74,40 +74,40 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20,
               ),
-              MyLoginTextField(
-                controller: _emailController,
-                hintText: "Email",
-                obscureText: false,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              MyLoginTextField(
-                controller: _passwordController,
-                hintText: "Password",
-                obscureText: true,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              NeuTextButton(
-                borderRadius: BorderRadius.circular(12),
-                buttonColor: Color.fromARGB(255, 244, 9, 83),
-                buttonHeight: 60,
-                buttonWidth: 250,
-                enableAnimation: true,
-                onPressed: () {
-                  _signIn();
-                },
-                text: Text(
-                  "Log In",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 23,
-                  ),
-                ),
-              ),
+              // MyLoginTextField(
+              //   controller: _emailController,
+              //   hintText: "Email",
+              //   obscureText: false,
+              // ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // MyLoginTextField(
+              //   controller: _passwordController,
+              //   hintText: "Password",
+              //   obscureText: true,
+              // ),
+              // SizedBox(
+              //   height: 30,
+              // ),
+              // NeuTextButton(
+              //   borderRadius: BorderRadius.circular(12),
+              //   buttonColor: Color.fromARGB(255, 244, 9, 83),
+              //   buttonHeight: 60,
+              //   buttonWidth: 250,
+              //   enableAnimation: true,
+              //   onPressed: () {
+              //     _signIn();
+              //   },
+              //   text: Text(
+              //     "Log In",
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: 23,
+              //     ),
+              //   ),
+              // ),
 
               SizedBox(
                 height: 20,

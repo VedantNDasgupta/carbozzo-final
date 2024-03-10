@@ -79,49 +79,49 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(
                 height: 20,
               ),
-              MyTextField(
-                controller: _usernameController,
-                hintText: "Username",
-                obscureText: false,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              MyTextField(
-                controller: _emailController,
-                hintText: "Email",
-                obscureText: false,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              MyTextField(
-                controller: _passwordController,
-                hintText: "Password",
-                obscureText: true,
-              ),
+              // MyTextField(
+              //   controller: _usernameController,
+              //   hintText: "Username",
+              //   obscureText: false,
+              // ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // MyTextField(
+              //   controller: _emailController,
+              //   hintText: "Email",
+              //   obscureText: false,
+              // ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // MyTextField(
+              //   controller: _passwordController,
+              //   hintText: "Password",
+              //   obscureText: true,
+              // ),
 
-              SizedBox(
-                height: 30,
-              ),
-              NeuTextButton(
-                borderRadius: BorderRadius.circular(12),
-                buttonColor: Color.fromARGB(255, 244, 9, 83),
-                buttonHeight: 60,
-                buttonWidth: 250,
-                enableAnimation: true,
-                onPressed: () {
-                  _signUp();
-                },
-                text: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 23,
-                  ),
-                ),
-              ),
+              // SizedBox(
+              //   height: 30,
+              // ),
+              // NeuTextButton(
+              //   borderRadius: BorderRadius.circular(12),
+              //   buttonColor: Color.fromARGB(255, 244, 9, 83),
+              //   buttonHeight: 60,
+              //   buttonWidth: 250,
+              //   enableAnimation: true,
+              //   onPressed: () {
+              //     _signUp();
+              //   },
+              //   text: Text(
+              //     "Sign Up",
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: 23,
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 20,
               ),

@@ -97,7 +97,6 @@ class _HowScreenState extends State<HowScreen>
                       )),
                 ],
               ),
-              //separation effect
               SizedBox(
                 height: 20,
               ),
@@ -124,7 +123,6 @@ class _HowScreenState extends State<HowScreen>
                 ),
               ),
               SizedBox(height: 15),
-
               SizedBox(
                 height: 20,
               ),
@@ -151,7 +149,6 @@ class _HowScreenState extends State<HowScreen>
                 ),
               ),
               const SizedBox(height: 15),
-
               SizedBox(
                 height: 20,
               ),
@@ -178,7 +175,6 @@ class _HowScreenState extends State<HowScreen>
                 ),
               ),
               const SizedBox(height: 15),
-
               const SizedBox(height: 30),
             ],
           ),

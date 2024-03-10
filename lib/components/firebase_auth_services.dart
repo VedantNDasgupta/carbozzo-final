@@ -12,7 +12,6 @@ class FirebaseAuthService {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      // Add user details including carbopoints
       await addUserDetails(credential.user!.uid, email);
 
       return credential.user;
@@ -28,10 +27,10 @@ class FirebaseAuthService {
 
   Future addUserDetails(String uid, String email) async {
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'name': '', // Add name if available
+      'name': '',
       'email': email,
       'carbopoints': 0,
-      'score': 0, // Default initial value for carbopoints
+      'score': 0,
     });
   }
 

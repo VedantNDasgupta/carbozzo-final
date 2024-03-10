@@ -507,8 +507,7 @@ class _IdeasPageState extends State<IdeasPage> {
         width: cardWidth,
         height: cardHeight,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-              cardWidth * 0.1), // Adjust the borderRadius dynamically
+          borderRadius: BorderRadius.circular(cardWidth * 0.1),
           border: Border.all(
             color: Colors.black,
             width: 2,

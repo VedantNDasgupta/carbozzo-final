@@ -30,7 +30,7 @@ class MyLoginTextField extends StatelessWidget {
         child: TextField(
           controller: controller,
           obscureText: obscureText,
-          style: TextStyle(color: Colors.white), // user input color
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

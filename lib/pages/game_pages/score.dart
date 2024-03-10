@@ -11,7 +11,7 @@ class ScorePage extends StatefulWidget {
 }
 
 class _ScorePageState extends State<ScorePage> {
-  bool isSoundOn = true; // Track whether sound is on or off
+  bool isSoundOn = true;
   int? highScore;
 
   @override

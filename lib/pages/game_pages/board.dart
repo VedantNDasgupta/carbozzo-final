@@ -74,17 +74,16 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void shakeScreen() {
-    // Perform the screen shake effect here
     HapticFeedback.vibrate();
   }
 
-  // Method to display a red overlay across the entire screen for a split second
+  // method to display a red overlay across the entire screen for a split second
   void flashRedOverlay() {
     setState(() {
       showRedOverlay = true; // Set flag to true to show red overlay
     });
 
-    // Revert back to original state after a split second
+    // reverts back to original state after a split second
     Timer(Duration(milliseconds: 500), () {
       setState(() {
         showRedOverlay = false; // Set flag to false to hide red overlay
@@ -146,7 +145,7 @@ class _GameBoardState extends State<GameBoard> {
 
                 currentPiece.movePiece(Direction.down);
 
-                // Increment collision count and check if it's a multiple of 5
+                // Increments collision count and check if it's a multiple of 5
                 pieceCollisionCount++;
                 if (pieceCollisionCount % 25 == 0) {
                   showButtons = true;
@@ -250,7 +249,7 @@ class _GameBoardState extends State<GameBoard> {
       int row = (currentPiece.position[i] / rowLength).floor();
       int col = currentPiece.position[i] % rowLength;
 
-      // Calculate the next position based on the direction
+      // Calculatses the next position based on the direction
       if (direction == Direction.left) {
         col -= 1;
       } else if (direction == Direction.right) {
@@ -259,12 +258,12 @@ class _GameBoardState extends State<GameBoard> {
         row += 1;
       }
 
-      // Check if the next position is out of bounds
+      // Checks if the next position is out of bounds
       if (row >= colLength || col < 0 || col >= rowLength) {
         return true;
       }
 
-      // Check if the next position is already occupied on the game board
+      // Checks if the next position is already occupied on the game board
       if (row >= 0 && gameBoard[row][col] != null) {
         return true;
       }
@@ -356,8 +355,7 @@ class _GameBoardState extends State<GameBoard> {
 
   void writeToFirestore() async {
     try {
-      final user = FirebaseAuth.instance
-          .currentUser; // Assuming you're using Firebase Authentication
+      final user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         final userDoc =
@@ -370,7 +368,7 @@ class _GameBoardState extends State<GameBoard> {
 
           // Ensure currentScore is of type int
           if (currentScore is int) {
-            // Update the 'Score' field only if currentScore is higher
+            // Update the score field only if currentScore is higher
             if (currentScore > currentScoreInFirestore) {
               await userDoc.update({
                 'score': currentScore,
@@ -384,7 +382,7 @@ class _GameBoardState extends State<GameBoard> {
             print('Current score is not of type int.');
           }
         } else {
-          // Document doesn't exist, create it with the 'Score' field
+          // Document doesn't exist, create it with the score field
           await userDoc.set({
             'score': currentScore,
           });
@@ -406,10 +404,10 @@ class _GameBoardState extends State<GameBoard> {
         children: [
           Positioned.fill(
             child: AnimatedOpacity(
-              opacity: showRedOverlay ? 1.0 : 0.0, // Show/hide the red overlay
-              duration: Duration(milliseconds: 300), // Animation duration
+              opacity: showRedOverlay ? 1.0 : 0.0,
+              duration: Duration(milliseconds: 300),
               child: Container(
-                color: Colors.red.withOpacity(1), // Red background color
+                color: Colors.red.withOpacity(1),
               ),
             ),
           ),
@@ -428,15 +426,13 @@ class _GameBoardState extends State<GameBoard> {
 
                       if (currentPiece.position.contains(index)) {
                         return Pixel(
-                          color:
-                              currentPiece.color, // Color of the current piece
+                          color: currentPiece.color,
                         );
                       } else {
                         final Tetranimo? tetranimoType = gameBoard[row][col];
                         if (tetranimoType != null) {
                           return Pixel(
-                            color: tetranimoColors[
-                                tetranimoType], // Color based on the piece type
+                            color: tetranimoColors[tetranimoType],
                           );
                         } else {
                           return Pixel(
@@ -474,14 +470,13 @@ class _GameBoardState extends State<GameBoard> {
                               if (quizData[currentQuestionIndex]
                                       .correctOptionIndex ==
                                   0) {
-                                currentScore +=
-                                    5; // Increase score if correct option selected
+                                currentScore += 5;
                               } else {
                                 currentScore = max(0, currentScore - 5);
-                                shakeScreen(); // Decrease score if incorrect option selected
+                                shakeScreen();
                                 flashRedOverlay();
                               }
-                              showButtons = false; // Hide buttons when pressed
+                              showButtons = false;
                               currentQuestionIndex =
                                   (currentQuestionIndex + 1) % quizData.length;
                             });
@@ -509,7 +504,7 @@ class _GameBoardState extends State<GameBoard> {
                                 style: GoogleFonts.pressStart2p(
                                   textStyle: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 12, // Adjust font size as needed
+                                    fontSize: 12,
                                   ),
                                 ),
                               ),
@@ -599,7 +594,7 @@ class _GameBoardState extends State<GameBoard> {
                 style: GoogleFonts.pressStart2p(
                   textStyle: TextStyle(
                     color: Colors.white,
-                    fontSize: 18, // Change the font size as needed
+                    fontSize: 18,
                   ),
                 ),
               ),

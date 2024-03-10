@@ -31,10 +31,10 @@ class HabitDatabase {
 
   // load data if it already exists
   void loadData() {
-    // if it's a new day, get habit list from database
+    // if it's a new day, get task list from database
     if (_myBox.get(todaysDateFormatted()) == null) {
       todaysHabitList = _myBox.get("CURRENT_HABIT_LIST");
-      // set all habit completed to false since it's a new day
+      // set all task completed to false since it's a new day
       for (int i = 0; i < todaysHabitList.length; i++) {
         todaysHabitList[i][1] = false;
       }
@@ -50,10 +50,10 @@ class HabitDatabase {
     // update todays entry
     _myBox.put(todaysDateFormatted(), todaysHabitList);
 
-    // update universal habit list in case it changed (new habit, edit habit, delete habit)
+    // update universal task list in case it changed
     _myBox.put("CURRENT_HABIT_LIST", todaysHabitList);
 
-    // calculate habit complete percentages for each day
+    // calculate task complete percentages for each day
     calculateHabitPercentages();
 
     // load heat map

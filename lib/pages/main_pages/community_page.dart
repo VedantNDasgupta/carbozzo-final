@@ -51,7 +51,7 @@ class _CommunityPageState extends State<CommunityPage> {
     await _carbosManager.fetchUserId(); // Fetch user ID
     await _carbosManager.fetchCarbos();
 
-    setState(() {}); // Update UI
+    setState(() {});
   }
 
   int initialPoints = 5000;
@@ -172,8 +172,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                                 color: Colors.black, width: 2)),
                                         padding: EdgeInsets.all(8),
                                         child: Icon(
-                                          Icons
-                                              .question_mark, // Replace with the actual icon you want
+                                          Icons.question_mark,
                                           color: Colors.black87,
                                           size: 28,
                                         ),
@@ -260,7 +259,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: Colors.black,
-                                    width: 2, // Increase the border width
+                                    width: 2,
                                   ),
                                 ),
                                 child: Padding(
@@ -272,8 +271,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                       style: GoogleFonts.raleway(
                                         fontSize: 35,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors
-                                            .white, // Change text color to black
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -403,7 +401,7 @@ class _CommunityPageState extends State<CommunityPage> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: Colors.black,
-                            width: 2, // Increase the border width
+                            width: 2,
                           ),
                         ),
                         child: Padding(
@@ -642,7 +640,7 @@ class _CommunityPageState extends State<CommunityPage> {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: Colors.black,
-                          width: 2, // Increase the border width
+                          width: 2,
                         ),
                       ),
                       child: Padding(
@@ -685,14 +683,13 @@ class _CommunityPageState extends State<CommunityPage> {
                     ),
                     Container(
                       width: 380,
-                      height:
-                          390, // Adjusted height to accommodate the contents
+                      height: 390,
                       decoration: BoxDecoration(
                         color: Colors.white60,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: Colors.black,
-                          width: 2, // Increase the border width
+                          width: 2,
                         ),
                       ),
                       child: Column(

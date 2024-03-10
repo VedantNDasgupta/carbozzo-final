@@ -27,7 +27,6 @@ class _CampusSelectionPageState extends State<CampusSelectionPage> {
   @override
   void initState() {
     super.initState();
-    // Load campus options from the JSON file
     loadCampusList();
   }
 
@@ -222,7 +221,7 @@ class _CampusSelectionPageState extends State<CampusSelectionPage> {
                     );
                   }
                 } else {
-                  // Condition 3: If not a student, navigate to BottomNavBarPage
+                  // Condition 3: If not a student, navigates to Bottomnavpage
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -259,11 +258,11 @@ class _CampusSelectionPageState extends State<CampusSelectionPage> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Get the current user's document in the 'users' collection
+        // Get the current user's doc in the users collection
         DocumentReference userDoc =
             FirebaseFirestore.instance.collection('users').doc(user.uid);
 
-        // Update the 'Campus' and 'GraduationYear' fields in the document
+        // Update the Campus and GraduationYear fields in the doc
         await userDoc.update({
           'campus': selectedCampus,
           'graduationYear': selectedYear,
@@ -271,7 +270,6 @@ class _CampusSelectionPageState extends State<CampusSelectionPage> {
       }
     } catch (e) {
       print('Error updating Firestore: $e');
-      // Handle error if necessary
     }
   }
 }
